@@ -23,13 +23,13 @@ int is_exit_status_bad();
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
 #ifdef CONFIG_TARGET_AM
-  am_init_monitor();
+  am_init_monitor();//该函数在nemu/src/monitor/monitor.c中
 #else
-  init_monitor(argc, argv);
+  init_monitor(argc, argv);//该函数在nemu/src/monitor/monitor.c中
 #endif
 
   /* Start engine. */
-  engine_start();
+  engine_start();//该函数在nemu/src/engine/interpreter/init.c中
 
-  return is_exit_status_bad();
+  return is_exit_status_bad();//该函数在nemu/src/utils/state.c中
 }
