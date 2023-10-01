@@ -40,8 +40,8 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-  return -1;//返回-1<0，经过mainloop中判断后会返回main函数
 	nemu_state.state=NEMU_QUIT;//记得要修改nemu_state的状态，否则直接q推出main中执行最后一个函数后main会返回1而不是0
+  return -1;//返回-1<0，经过mainloop中判断后会返回main函数
 }
 
 static int cmd_help(char *args);
