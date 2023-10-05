@@ -30,8 +30,8 @@ void init_isa();
 
 // reg
 extern CPU_state cpu;
-void isa_reg_display();
-word_t isa_reg_str2val(const char *name, bool *success);
+void isa_reg_display();//输出所有寄存器的值
+word_t isa_reg_str2val(const char *name, bool *success);//若存在名称为name的寄存器, 则返回其当前值, 并设置success为true; 否则设置success为false
 
 // exec
 struct Decode;

@@ -19,14 +19,14 @@
 #include <common.h>
 
 static inline int check_reg_idx(int idx) {
-  IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MUXDEF(CONFIG_RVE, 16, 32)));
+  IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MUXDEF(CONFIG_RVE, 16, 32)));//宏预处理后就是0<=idx<32
   return idx;
 }
 
-#define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
+#define gpr(idx) (cpu.gpr[check_reg_idx(idx)])//表示寄存器堆gpr里面下标为idx的寄存器储存的值,其中check_reg_idx函数会检查下标idx的寄存器是否存在
 
 static inline const char* reg_name(int idx) {
-  extern const char* regs[];
+ extern const char* regs[];
   return regs[check_reg_idx(idx)];
 }
 

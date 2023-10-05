@@ -45,8 +45,8 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_help(char *args);
-
 static int cmd_si(char *args);
+static int cmd_info(char *args);
 
 static struct {
   const char *name;
@@ -58,7 +58,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-	{"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1",cmd_si},//单步执行
+	{"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1,格式为si [N]",cmd_si},//单步执行
+	{"info","打印程序状态,格式为info SUBCMD, info r:打印寄存器状态,info w:打印监视点信息",cmd_info},//打印程序状态
 };
 
 #define NR_CMD ARRLEN(cmd_table)//用宏定义NR_CMD为cmd_table的长度
@@ -99,6 +100,18 @@ void sdb_set_batch_mode() {
   is_batch_mode = true;
 }
 
+static int cmd_info(char *args){
+	char *arg = strtok(NULL," ");
+	const char* r="r";
+	const char* w="w";
+	if(strcmp(arg,r)==0){
+		isa_reg_display();//打印所有寄存器中的值	
+	}
+	else if(strcmp(arg,w)==0){
+		
+	}
+	return 0;
+}
 void sdb_mainloop() {
   if (is_batch_mode) {//处于bath_mode状态,则调用cmd_c函数
     cmd_c(NULL);

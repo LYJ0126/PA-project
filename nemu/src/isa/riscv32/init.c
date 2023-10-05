@@ -28,7 +28,7 @@ static const uint32_t img [] = {
 
 static void restart() {
   /* Set the initial program counter. */
-  cpu.pc = RESET_VECTOR;
+  cpu.pc = RESET_VECTOR;//该处预处理宏最终表示0x80000000
 
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
