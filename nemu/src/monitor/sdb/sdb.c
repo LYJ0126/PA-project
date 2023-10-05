@@ -46,6 +46,8 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -56,7 +58,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+	{"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1",cmd_si},//单步执行
 };
 
 #define NR_CMD ARRLEN(cmd_table)//用宏定义NR_CMD为cmd_table的长度
@@ -84,6 +86,11 @@ static int cmd_help(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args){
+	int N = atoi(args);
+	cpu_exec((uint64_t)N);//cpu_exec在nemu/src/cpu中
+	return 0;
+}
 void sdb_set_batch_mode() {
   is_batch_mode = true;
 }
@@ -99,7 +106,7 @@ void sdb_mainloop() {
 
     /* extract the first token as the command */
     char *cmd = strtok(str, " ");//strtok分解字符串str,到空格处停止,分离出来的字符串作为命令,用于过滤空格
-    if (cmd == NULL) { continue; }
+    if (cmd == NULL) { continue; }//空命令
 
     /* treat the remaining string as the arguments,
      * which may need further parsing
@@ -117,7 +124,7 @@ void sdb_mainloop() {
     int i;
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }//cmd_talbe[i]对应函数返回值小于0,返回main
+        if (cmd_table[i].handler(args) < 0) { return; }//先执行函数cmd_table[i].handler(args),cmd_talbe[i]对应函数返回值小于0,返回main
         break;
       }
     }
