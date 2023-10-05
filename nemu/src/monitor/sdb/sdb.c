@@ -122,11 +122,10 @@ static int cmd_x(char *args){
 	char temp[100];
 	word_t value;
 	strcpy(temp,args);
-	sscanf(temp, "%u %u",&N,&expr);
+	sscanf(temp, "%u%x",&N,&expr);
 	for(uint32_t i=0;i<N;i++){
-		expr+=i;
-		value = paddr_read(expr,4);
-		printf("0x%X\t 0x%X\t\n",expr,value);
+		expr+=(i*4);
+		printf("0x%x\t 0x%x\t\n",expr,value);
 	}
 	return 0;
 }

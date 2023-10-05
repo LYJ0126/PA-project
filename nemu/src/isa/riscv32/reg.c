@@ -25,7 +25,7 @@ const char *regs[] = {
 
 void isa_reg_display() {//打印所有寄存器中的值
 	for(int i=0;i<32;++i){
-		printf("%s\t 0x%X\t %u\t\n",regs[i],gpr(i),gpr(i));
+		printf("%s\t 0x%x\t       %u\t\n",regs[i],gpr(i),gpr(i));
 	}
 }
 
