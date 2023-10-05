@@ -9,6 +9,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/paddr.h>
 
 static int is_batch_mode = false;
 
@@ -38,15 +39,16 @@ static int cmd_c(char *args) {
   return 0;
 }
 
-
 static int cmd_q(char *args) {
 	nemu_state.state=NEMU_QUIT;//记得要修改nemu_state的状态，否则直接q推出main中执行最后一个函数后main会返回1而不是0
   return -1;//返回-1<0，经过mainloop中判断后会返回main函数
 }
 
+word_t paddr_read(paddr_t addr, int len);
 static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
+static int cmd_x(char *args);
 
 static struct {
   const char *name;
@@ -60,6 +62,7 @@ static struct {
   /* TODO: Add more commands */
 	{"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1,格式为si [N]",cmd_si},//单步执行
 	{"info","打印程序状态,格式为info SUBCMD, info r:打印寄存器状态,info w:打印监视点信息",cmd_info},//打印程序状态
+	{"x","扫描内存,格式为x N EXPR,求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节",cmd_x},
 };
 
 #define NR_CMD ARRLEN(cmd_table)//用宏定义NR_CMD为cmd_table的长度
@@ -109,6 +112,21 @@ static int cmd_info(char *args){
 	}
 	else if(strcmp(arg,w)==0){
 		
+	}
+	return 0;
+}
+
+static int cmd_x(char *args){
+	uint32_t N;
+	uint32_t expr;
+	char temp[100];
+	word_t value;
+	strcpy(temp,args);
+	sscanf(temp, "%u %u",&N,&expr);
+	for(uint32_t i=0;i<N;i++){
+		expr+=i;
+		value = paddr_read(expr,4);
+		printf("0x%X\t 0x%X\t\n",expr,value);
 	}
 	return 0;
 }
