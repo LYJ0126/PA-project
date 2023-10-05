@@ -105,7 +105,7 @@ static int cmd_info(char *args){
 	const char* r="r";
 	const char* w="w";
 	if(strcmp(arg,r)==0){
-		isa_reg_display();//打印所有寄存器中的值	
+		isa_reg_display();//打印所有寄存器中的值,该函数在nemu/src/isa/$ISA/reg.c中
 	}
 	else if(strcmp(arg,w)==0){
 		
