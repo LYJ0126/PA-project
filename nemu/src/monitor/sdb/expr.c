@@ -178,6 +178,7 @@ bool check_parentheses(int p, int q)
 		flag=false;
 		flag2=false;
 	}
+	printf("flag=%d  flag2=%d\n",flag,flag2);
 	return flag2;
 }
 long long eval(int p, int q)
@@ -269,5 +270,7 @@ word_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
+	printf("%d",flag);
+	assert(0);
   return 0;
 }
