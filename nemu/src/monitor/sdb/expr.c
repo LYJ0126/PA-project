@@ -41,7 +41,7 @@ static struct rule {
 	{"-",'-'},            // minus
 	{"\\*",'*'},          // multiply
 	{"/",'/'},					  // divide  
-	{"(\\d)+",TK_NUMBER},   // number
+	{"[0-9]+",TK_NUMBER},   // number
 	{"\\(",'('},					// left bracket
 	{"\\)",')'},					// right bracket
 };
