@@ -19,7 +19,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-
+word_t expr(char *e, bool *success);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -53,6 +53,7 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
+static int cmd_p(char *args);
 
 static struct {
   const char *name;
@@ -66,7 +67,8 @@ static struct {
   /* TODO: Add more commands */
 	{"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1,格式为si [N]",cmd_si},//单步执行
 	{"info","打印程序状态,格式为info SUBCMD, info r:打印寄存器状态,info w:打印监视点信息",cmd_info},//打印程序状态
-	{"x","扫描内存,格式为x N EXPR,求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节",cmd_x},
+	{"x","扫描内存,格式为x N EXPR,求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节",cmd_x},//扫描内存
+	{"p","表达式求值,格式为p EXPR,求出表达式EXPR的值",cmd_p},//表达式求值
 };
 
 #define NR_CMD ARRLEN(cmd_table)//用宏定义NR_CMD为cmd_table的长度
@@ -122,17 +124,28 @@ static int cmd_info(char *args){
 
 static int cmd_x(char *args){
 	uint32_t N;
-	uint32_t expr;
+	uint32_t expression;
 	char temp[100];
 	word_t value;
 	strcpy(temp,args);
-	sscanf(temp, "%u%x",&N,&expr);
+	sscanf(temp, "%u%x",&N,&expression);
 	for(uint32_t i=0;i<N;i++){
-		expr+=(i*4);
-		printf("0x%-8x\t 0x%-8x\t\n",expr,value);
+		expression+=(i*4);
+		printf("0x%-8x\t 0x%-8x\t\n",expression,value);
 	}
 	return 0;
 }
+
+static int cmd_p(char *args){
+	bool *suc = (bool *)malloc(sizeof(bool));
+	uint32_t tempvalue = expr(args, suc); 
+	if(*suc == false) printf("表达式有误\n");
+	printf("%u",tempvalue);
+	free(suc);
+	suc = NULL;
+	return 0;
+}
+
 void sdb_mainloop() {
   if (is_batch_mode) {//处于bath_mode状态,则调用cmd_c函数
     cmd_c(NULL);
