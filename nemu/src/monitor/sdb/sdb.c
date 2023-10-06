@@ -124,15 +124,16 @@ static int cmd_info(char *args){
 
 static int cmd_x(char *args){
 	uint32_t N;
-	uint32_t expression;
+	uint32_t addr;
 	char temp[100];
 	word_t value;
 	strcpy(temp,args);
-	sscanf(temp, "%u%x",&N,&expression);
+	sscanf(temp, "%u%x",&N,&addr);
+	int tempaddr;
 	for(uint32_t i=0;i<N;i++){
-		expression+=4;
-		value = paddr_read(expression, 4);
-		printf("0x%-8x\t 0x%-8x\t\n",expression,value);
+		tempaddr=addr+4*i;
+		value = paddr_read(tempaddr, 4);
+		printf("0x%-8x\t 0x%-8x\t\n",tempaddr,value);
 	}
 	return 0;
 }
