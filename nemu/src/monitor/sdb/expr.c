@@ -182,6 +182,8 @@ bool check_parentheses(int p, int q)
 }
 long long eval(int p, int q)
 {
+	printf("p:%d q:%d\n",p,q);
+	printf("flag:%d\n",flag);
 	if(flag==false) return 0;
 	if(p>q){//Bad expression
 		flag=false;
