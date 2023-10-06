@@ -221,7 +221,7 @@ long long eval(int p, int q)
 		int oppos=p;//最低优先级的位置
 		for(int i=p;i<=q;i++){
 			if(tokens[i].type=='(') ++parmatch;
-			else if(tokens[i].type==')') ++parmatch;
+			else if(tokens[i].type==')') --parmatch;
 			if(parmatch==0){
 				if(tokens[i].type==(int)'+'||tokens[i].type==(int)'-'){
 					level=1;
