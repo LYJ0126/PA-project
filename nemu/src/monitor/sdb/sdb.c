@@ -140,7 +140,7 @@ static int cmd_p(char *args){
 	bool *suc = (bool *)malloc(sizeof(bool));
 	uint32_t tempvalue = expr(args, suc); 
 	if(*suc == false) printf("表达式有误\n");
-	printf("%u",tempvalue);
+	printf("%u\n",tempvalue);
 	free(suc);
 	suc = NULL;
 	return 0;
