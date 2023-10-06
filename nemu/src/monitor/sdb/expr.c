@@ -181,7 +181,7 @@ bool check_parentheses(int p, int q)
 }
 long long eval(int p, int q)
 {
-	if(!flag) return 0;
+	if(flag==false) return 0;
 	if(p>q){//Bad expression
 		flag=false;
 		return 0;
@@ -208,7 +208,7 @@ long long eval(int p, int q)
 		 return eval(p+1,q-1);
 	}
 	else{
-		if(!flag) return 0;//在上一步括号检测的时候发现不合法
+		if(flag==false) return 0;//在上一步括号检测的时候发现不合法
 		int parmatch=0;//记录括号匹配情况
 		char op='@';
 		int level = 2;//当前最低优先级
