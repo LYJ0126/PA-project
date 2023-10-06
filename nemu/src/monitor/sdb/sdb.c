@@ -131,6 +131,7 @@ static int cmd_x(char *args){
 	sscanf(temp, "%u%x",&N,&expression);
 	for(uint32_t i=0;i<N;i++){
 		expression+=(i*4);
+		value = paddr_read(expression, 4);
 		printf("0x%-8x\t 0x%-8x\t\n",expression,value);
 	}
 	return 0;
