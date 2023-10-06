@@ -84,6 +84,7 @@ static bool make_token(char *e) {
 
   while (e[position]!='\0') {
     /* Try all rules one by one. */
+		printf("%d\n",position);
 		if(nr_token>31){
 			printf("输入表达式的token数超过了缓冲区长度\n");
 			return false;
@@ -135,7 +136,7 @@ static bool make_token(char *e) {
 																if(substr_len<32){
 																	tokens[nr_token].str[substr_len]='\0';
 																}
-																printf("%s\n",tokens[nr_token].str);
+																printf("tokens[nr_token].str:%s\n",tokens[nr_token].str);
 																nr_token++;
 															}
 															break;
