@@ -202,6 +202,7 @@ long long eval(int p, int q)
 		 long long num=0;
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
+			 t++;
 		 }
 		 printf("%lld\n",num);
 		 return num;
