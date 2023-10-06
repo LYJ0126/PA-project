@@ -183,7 +183,6 @@ bool check_parentheses(int p, int q)
 }
 long long eval(int p, int q)
 {
-	printf("p:%d, q:%d\n",p,q);
 	if(flag==false) return 0;
 	if(p>q){//Bad expression
 		flag=false;
@@ -198,14 +197,12 @@ long long eval(int p, int q)
 			 flag=false;
 			 return 0;
 		 }
-		 printf("%d\n",flag);
 		 int t=0;
 		 long long num=0;
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
 		 }
-		 printf("%lld\n",num);
 		 return num;
 	}
 	else if(check_parentheses(p, q) == true){
@@ -277,6 +274,5 @@ word_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
-	assert(0);
   return 0;
 }
