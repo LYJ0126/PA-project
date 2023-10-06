@@ -198,10 +198,12 @@ long long eval(int p, int q)
 			 return 0;
 		 }
 		 printf("%d\n",flag);
-		 uint32_t t=0,num=0;
+		 int t=0;
+		 long long num=0;
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 		 }
+		 printf("%lld\n",num);
 		 return num;
 	}
 	else if(check_parentheses(p, q) == true){
@@ -264,6 +266,7 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
 	printf("%d\n",flag);
 	long long vvalue = eval(0,nr_token-1);
+	printf("%lld",vvalue);
 	if(flag){
 		*success = true;
 		return (uint32_t)vvalue;
