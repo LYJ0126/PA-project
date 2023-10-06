@@ -135,6 +135,7 @@ static bool make_token(char *e) {
 																if(substr_len<32){
 																	tokens[nr_token].str[substr_len]='\0';
 																}
+																printf("%s\n",tokens[nr_token].str);
 																nr_token++;
 															}
 															break;
@@ -259,7 +260,6 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-	printf("%u",nr_token);
 	long long vvalue = eval(0,nr_token-1);	
 	if(flag){
 		*success = true;
