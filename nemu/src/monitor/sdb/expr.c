@@ -178,7 +178,6 @@ bool check_parentheses(int p, int q)
 		flag=false;
 		flag2=false;
 	}
-	printf("flag=%d  flag2=%d\n",flag,flag2);
 	return flag2;
 }
 long long eval(int p, int q)
@@ -235,7 +234,6 @@ long long eval(int p, int q)
 				}
 			}
 		}
-		printf("op:%d %c",(int)op,op);
 		if(op=='@'){//没有符合条件的运算符
 			flag=false;
 			return 0;
