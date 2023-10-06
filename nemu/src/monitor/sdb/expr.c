@@ -267,7 +267,6 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
 	printf("%d\n",flag);
 	long long vvalue = eval(0,nr_token-1);
-	printf("%lld",vvalue);
 	if(flag){
 		*success = true;
 		return (uint32_t)vvalue;
@@ -276,7 +275,6 @@ word_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
-	printf("%d",flag);
 	assert(0);
   return 0;
 }
