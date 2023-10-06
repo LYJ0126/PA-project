@@ -223,20 +223,21 @@ long long eval(int p, int q)
 			if(tokens[i].type=='(') ++parmatch;
 			else if(tokens[i].type==')') ++parmatch;
 			if(parmatch==0){
-				if(tokens[i].type=='+'||tokens[i].type=='-'){
+				if(tokens[i].type==(int)'+'||tokens[i].type==(int)'-'){
 					level=1;
-					op=tokens[i].type;
+					op=(char)tokens[i].type;
 					oppos=i;
 				}
-				else if(tokens[i].type=='*'||tokens[i].type=='/'){
+				else if(tokens[i].type==(int)'*'||tokens[i].type==(int)'/'){
 					if(level>=2){
 						level=2;
-						op=tokens[i].type;
+						op=(char)tokens[i].type;
 						oppos=i;
 					}
 				}
 			}
 		}
+		printf("op:%d %c",(int)op,op);
 		if(op=='@'){//没有符合条件的运算符
 			flag=false;
 			return 0;
