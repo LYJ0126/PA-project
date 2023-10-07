@@ -258,7 +258,6 @@ bool check_parentheses(int p, int q)
 }
 long long eval(int p, int q)
 {
-	printf("p:%d q:%d\n",p,q);
 	if(flag==false) return 0;
 	if(p>q){//Bad expression
 		flag=false;
@@ -279,16 +278,13 @@ long long eval(int p, int q)
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
 		 }
-		 printf("num:%lld\n",num);
 		 return num;
 	}
 	else if(check_parentheses(p, q) == true){
 		/* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
-		 long long temp = eval(p+1,q-1);
-		 printf("%lld\n",temp);
-		 return temp;
+		 return eval(p+1,q-1);
 	}
 	else{
 		if(flag==false) return 0;//在上一步括号检测的时候发现不合法
@@ -321,18 +317,14 @@ long long eval(int p, int q)
 		long long val1 = eval(p,oppos-1);
 		long long val2 = eval(oppos+1,q);
 		switch(op){
-			case (int)'+': printf("%lld\n",val1+val2);
-								return val1+val2;
-								break;
-			case (int)'-': printf("%lld\n",val1-val2);
-								return val1-val2;
-								break;
-			case (int)'*': printf("%lld\n",val1*val2);
-								return val1*val2;
-								break;
-			case (int)'/': printf("%lld\n",val1/val2);
-								return val1/val2;
-								break;
+			case (int)'+': return val1+val2;
+										 break;
+			case (int)'-': return val1-val2;
+										 break;
+			case (int)'*': return val1*val2;
+										 break;
+			case (int)'/': return val1/val2;
+										 break;
 			default: assert(0);
 		}
 	}
