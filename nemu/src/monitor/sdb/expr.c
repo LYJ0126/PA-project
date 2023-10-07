@@ -219,13 +219,13 @@ static bool make_token(char *e) {
 	//对负数,解引用的特殊处理
 	//判断是否是解引用
 	for(int i=0;i<nr_token;i++){
-		if(tokens[i].type==(int)'*'&&(i==0||(tokens[i-1].type!=TK_NUMBER||tokens[i-1].type!=TK_HEX||tokens[i-1].type!=(int)')'))){
+		if(tokens[i].type==(int)'*'&&(i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_HEX&&tokens[i-1].type!=(int)')'))){
 			tokens[i].type = TK_DEREF;
 		}
 	}
 	//判断是否是负数
 	for(int i=0;i<nr_token;i++){
-		if(tokens[i].type==(int)'-'&&(i==0||(tokens[i-1].type!=TK_NUMBER||tokens[i-1].type!=TK_HEX||tokens[i-1].type!=(int)')'))){
+		if(tokens[i].type==(int)'-'&&(i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_HEX&&tokens[i-1].type!=(int)')'))){
 			tokens[i].type = TK_NEGNUM;
 		}
 	}
@@ -293,44 +293,44 @@ long long eval(int p, int q)
 	else{
 		if(flag==false) return 0;//在上一步括号检测的时候发现不合法
 		int parmatch=0;//记录括号匹配情况
-		char op='@';
+		int op=(int)'@';
 		int level = 2;//当前最低优先级
 		int oppos=p;//最低优先级的位置
-		for(int i=q;i>=p;i--){
+		for(int i=p;i<=q;i++){
 			if(tokens[i].type=='(') ++parmatch;
 			else if(tokens[i].type==')') --parmatch;
 			if(parmatch==0){
 				if(tokens[i].type==(int)'+'||tokens[i].type==(int)'-'){
 					level=1;
-					op=(char)tokens[i].type;
+					op=tokens[i].type;
 					oppos=i;
 				}
 				else if(tokens[i].type==(int)'*'||tokens[i].type==(int)'/'){
 					if(level>=2){
 						level=2;
-						op=(char)tokens[i].type;
+						op=tokens[i].type;
 						oppos=i;
 					}
 				}
 			}
 		}
-		if(op=='@'){//没有符合条件的运算符
+		if(op==(int)'@'){//没有符合条件的运算符
 			flag=false;
 			return 0;
 		}
 		long long val1 = eval(p,oppos-1);
 		long long val2 = eval(oppos+1,q);
 		switch(op){
-			case '+': printf("%lld\n",val1+val2);
+			case (int)'+': printf("%lld\n",val1+val2);
 								return val1+val2;
 								break;
-			case '-': printf("%lld\n",val1-val2);
+			case (int)'-': printf("%lld\n",val1-val2);
 								return val1-val2;
 								break;
-			case '*': printf("%lld\n",val1*val2);
+			case (int)'*': printf("%lld\n",val1*val2);
 								return val1*val2;
 								break;
-			case '/': printf("%lld\n",val1/val2);
+			case (int)'/': printf("%lld\n",val1/val2);
 								return val1/val2;
 								break;
 			default: assert(0);
