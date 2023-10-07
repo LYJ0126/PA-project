@@ -263,21 +263,17 @@ word_t expr(char *e, bool *success) {
 	flag = true;// 记得初始化
   if (!make_token(e)) {
     *success = false;
-		printf("success:%d\n",*success);
     return 0;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
 	long long vvalue = eval(0,nr_token-1);
-	printf("flag:%d\n",flag);
 	if(flag){
 		*success = true;
-		printf("success:%d\n",*success);
 		return (uint32_t)vvalue;
 	}
 	else {
 		*success = false;
-		printf("success:%d\n",*success);
 		return 0;
 	}
   return 0;
