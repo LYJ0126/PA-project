@@ -23,15 +23,15 @@
 enum {
   TK_NOTYPE = 256, TK_EQ,
   /* TODO: Add more token types */
-	TK_NUMBER = 255, 
-	TK_HEX = 254,
-	TK_REG = 247,
-	TK_DEREF = 253,
-	TK_EQUAL = 252,
-	TK_NE = 251,
-	TK_LE = 250,
-	TK_AND = 249,
-	TK_OR = 248,
+	TK_DEREF = 255,
+	TK_LE = 254,
+	TK_AND = 30,
+	TK_OR = 29,
+	TK_NE = 28,
+	TK_EQUAL = 27,
+	TK_HEX = 26,
+	TK_REG = 25,
+	TK_NUMBER = 24,
 };
 
 static struct rule {
@@ -45,8 +45,8 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
-	{"-",'-'},            // minus
-	{"\\*",'*'},          // multiply
+	{"-",'-'},            // minus,后面注意和负数区分
+	{"\\*",'*'},          // multiply,后面注意和解引用区分
 	{"/",'/'},					  // divide  
 	{"0x[0-9,a-z,A-Z]",TK_HEX}, //hex number
 	{"[0-9]+",TK_NUMBER},   // number
@@ -57,6 +57,8 @@ static struct rule {
 	{"\\!\\=",TK_NE},			// not equal
 	{"\\<\\=",TK_LE},			// less than or equal
 	{"\\&\\&",TK_AND},		// and
+	{"\\|\\|",TK_OR},			// or
+	{"==", TK_EQ},        // equal
 };
 
 #define NR_REGEX ARRLEN(rules)
