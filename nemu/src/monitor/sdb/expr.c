@@ -296,7 +296,7 @@ long long eval(int p, int q)
 		char op='@';
 		int level = 2;//当前最低优先级
 		int oppos=p;//最低优先级的位置
-		for(int i=p;i<=q;i++){
+		for(int i=q;i>=p;i--){
 			if(tokens[i].type=='(') ++parmatch;
 			else if(tokens[i].type==')') --parmatch;
 			if(parmatch==0){
