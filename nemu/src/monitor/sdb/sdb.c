@@ -144,7 +144,6 @@ static int cmd_p(char *args){
 	if(*suc == false) printf("表达式有误\n");
 	else printf("%u\n",tempvalue);
 	free(suc);
-	suc = NULL;
 	return 0;
 }
 
