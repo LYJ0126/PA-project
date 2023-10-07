@@ -47,7 +47,7 @@ static struct rule {
 	{"[0-9]+",TK_NUMBER},   // number
 	{"\\(",'('},					// left bracket
 	{"\\)",')'},					// right bracket
-	{"*",TK_DEREF},			  // dereference
+	{"\\*",TK_DEREF},			  // dereference
 };
 
 #define NR_REGEX ARRLEN(rules)
