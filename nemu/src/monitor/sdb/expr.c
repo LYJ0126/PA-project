@@ -262,6 +262,7 @@ long long eval(int p, int q)
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
+		printf("success:%d\n",*success);
     return 0;
   }
 
@@ -269,10 +270,12 @@ word_t expr(char *e, bool *success) {
 	long long vvalue = eval(0,nr_token-1);
 	if(flag){
 		*success = true;
+		printf("success:%d\n",*success);
 		return (uint32_t)vvalue;
 	}
 	else {
 		*success = false;
+		printf("success:%d\n",*success);
 		return 0;
 	}
   return 0;
