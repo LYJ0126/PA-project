@@ -24,12 +24,18 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {//打印所有寄存器中的值
+	printf("pc\t 0x%-8x\t %u\n",cpu.pc,cpu.pc);
 	for(int i=0;i<32;++i){
 		printf("%s\t 0x%-8x\t %u\n",regs[i],gpr(i),gpr(i));
 	}
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
+	char temp[5]={"pc"};
+	if(strcmp(s,temp)==0){
+		*success = true;
+		return cpu.pc;
+	}
 	for(int i=0;i<32;++i){
 		if((strcmp(s,regs[i]))==0){
 			*success = true;
