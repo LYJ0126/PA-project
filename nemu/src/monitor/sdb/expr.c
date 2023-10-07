@@ -268,6 +268,7 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
 	long long vvalue = eval(0,nr_token-1);
+	printf("flag:%d",flag);
 	if(flag){
 		*success = true;
 		printf("success:%d\n",*success);
