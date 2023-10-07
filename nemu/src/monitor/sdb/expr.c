@@ -23,15 +23,16 @@
 enum {
   TK_NOTYPE = 256, TK_EQ,
   /* TODO: Add more token types */
-	TK_DEREF = 255,
-	TK_LE = 254,
-	TK_AND = 30,
-	TK_OR = 29,
-	TK_NE = 28,
-	TK_EQUAL = 27,
-	TK_HEX = 26,
-	TK_REG = 25,
-	TK_NUMBER = 24,
+	TK_DEREF = 30,
+	TK_LE = 29,
+	TK_AND = 28,
+	TK_OR = 27,
+	TK_NE = 26,
+	TK_EQUAL = 25,
+	TK_NEGNUM = 24,
+	TK_HEX = 23,
+	TK_REG = 22,
+	TK_NUMBER = 21,
 };
 
 static struct rule {
@@ -42,15 +43,12 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+//注意顺序(优先级)
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
 	{"-",'-'},            // minus,后面注意和负数区分
 	{"\\*",'*'},          // multiply,后面注意和解引用区分
 	{"/",'/'},					  // divide  
-	{"0x[0-9,a-z,A-Z]",TK_HEX}, //hex number
-	{"[0-9]+",TK_NUMBER},   // number
-	{"\\$[a-z,A-Z]*[0-9]*",TK_REG},// register
 	{"\\(",'('},					// left bracket
 	{"\\)",')'},					// right bracket
 	{"\\=\\=",TK_EQUAL},	// expression equal
@@ -58,7 +56,10 @@ static struct rule {
 	{"\\<\\=",TK_LE},			// less than or equal
 	{"\\&\\&",TK_AND},		// and
 	{"\\|\\|",TK_OR},			// or
-	{"==", TK_EQ},        // equal
+	{"\\$[a-z,A-Z]*[0-9]*",TK_REG},// register
+//	{"==", TK_EQ},        // equal
+	{"0x[0-9,a-z,A-Z]",TK_HEX}, //hex number
+  {"[0-9]+",TK_NUMBER},   // number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -140,15 +141,52 @@ static bool make_token(char *e) {
 										nr_token++;
 										break;
 					case TK_NE: tokens[nr_token].type = TK_NE;
+											nr_token++;
 											break;
 					case TK_EQUAL: tokens[nr_token].type = TK_EQUAL;
+												 nr_token++;
 												 break;
 					case TK_LE: tokens[nr_token].type = TK_LE;
+											nr_token++;
 											break;
 					case TK_AND: tokens[nr_token].type = TK_AND;
+											 nr_token++;
 											 break;
 					case TK_OR: tokens[nr_token].type = TK_OR;
+											nr_token++;
 											break;
+					case TK_REG:{
+											 if(substr_len-1>32){
+												 printf("输入的寄存器名字串长度超过了缓冲区长度\n");
+												 return false;
+											 }
+											 else {
+															tokens[nr_token].type = TK_REG;
+															for(int i=substr_len-1;i>0;i++){//i到1即可,不需要把第一个'$'记录进去
+																tokens[nr_token].str[i-1]=e[position-(substr_len-i)];
+															}
+															if(substr_len-1<32) tokens[nr_token].str[substr_len-1]='\0';
+															nr_token++;
+											 }
+											 break;
+											} 
+					case TK_HEX: {	
+													if(substr_len-2>32){
+														printf("输出的数长度超过了缓冲区长度\n");
+														return false;
+													}
+													else {
+														tokens[nr_token].type = TK_HEX;
+														for(int i=substr_len-1;i>=2;--i){//i到2即可,不需要把前两个"0x"记录进去
+															tokens[nr_token].str[i] = e[position-(substr_len-i)];
+														}
+														if(substr_len-2<32){
+															tokens[nr_token].str[substr_len-2]='\0';
+														}
+														nr_token++;
+													}
+													break;
+											 }
 					case TK_NUMBER: {
 															if(substr_len>32){
 																printf("输入的数长度超过了缓冲区长度\n");
@@ -166,9 +204,6 @@ static bool make_token(char *e) {
 															}
 															break;
 														}
-					 case TK_REG: {
-													
-												}
           default: TODO();
         }
 
@@ -181,7 +216,19 @@ static bool make_token(char *e) {
       return false;
     }
   }
-
+	//对负数,解引用的特殊处理
+	//判断是否是解引用
+	for(int i=0;i<nr_token;i++){
+		if(tokens[i].type==(int)'*'&&(i==0||(tokens[i-1].type!=TK_NUMBER||tokens[i-1].type!=TK_HEX||tokens[i-1].type!=(int)')'))){
+			tokens[i].type = TK_DEREF;
+		}
+	}
+	//判断是否是负数
+	for(int i=0;i<nr_token;i++){
+		if(tokens[i].type==(int)'-'&&(i==0||(tokens[i-1].type!=TK_NUMBER||tokens[i-1].type!=TK_HEX||tokens[i-1].type!=(int)')'))){
+			tokens[i].type = TK_NEGNUM;
+		}
+	}
   return true;
 }
 
