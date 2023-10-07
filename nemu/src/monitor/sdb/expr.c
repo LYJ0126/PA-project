@@ -260,6 +260,7 @@ long long eval(int p, int q)
 }
 
 word_t expr(char *e, bool *success) {
+	flag = true;// 记得初始化
   if (!make_token(e)) {
     *success = false;
 		printf("success:%d\n",*success);
@@ -268,7 +269,7 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
 	long long vvalue = eval(0,nr_token-1);
-	printf("flag:%d",flag);
+	printf("flag:%d\n",flag);
 	if(flag){
 		*success = true;
 		printf("success:%d\n",*success);
