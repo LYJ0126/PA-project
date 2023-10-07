@@ -25,7 +25,13 @@ enum {
   /* TODO: Add more token types */
 	TK_NUMBER = 255, 
 	TK_HEX = 254,
+	TK_REG = 247,
 	TK_DEREF = 253,
+	TK_EQUAL = 252,
+	TK_NE = 251,
+	TK_LE = 250,
+	TK_AND = 249,
+	TK_OR = 248,
 };
 
 static struct rule {
@@ -39,15 +45,18 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
 	{"-",'-'},            // minus
 	{"\\*",'*'},          // multiply
 	{"/",'/'},					  // divide  
 	{"0x[0-9,a-z,A-Z]",TK_HEX}, //hex number
 	{"[0-9]+",TK_NUMBER},   // number
+	{"\\$[a-z,A-Z]*[0-9]*",TK_REG},// register
 	{"\\(",'('},					// left bracket
 	{"\\)",')'},					// right bracket
-	{"\\*",TK_DEREF},			  // dereference
+	{"\\=\\=",TK_EQUAL},	// expression equal
+	{"\\!\\=",TK_NE},			// not equal
+	{"\\<\\=",TK_LE},			// less than or equal
+	{"\\&\\&",TK_AND},		// and
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -56,8 +65,9 @@ static regex_t re[NR_REGEX] = {};
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
- */
+  */
 void init_regex() {
+
   int i;
   char error_msg[128];
   int ret;
@@ -127,6 +137,16 @@ static bool make_token(char *e) {
 					case ')': tokens[nr_token].type = (int)')';
 										nr_token++;
 										break;
+					case TK_NE: tokens[nr_token].type = TK_NE;
+											break;
+					case TK_EQUAL: tokens[nr_token].type = TK_EQUAL;
+												 break;
+					case TK_LE: tokens[nr_token].type = TK_LE;
+											break;
+					case TK_AND: tokens[nr_token].type = TK_AND;
+											 break;
+					case TK_OR: tokens[nr_token].type = TK_OR;
+											break;
 					case TK_NUMBER: {
 															if(substr_len>32){
 																printf("输入的数长度超过了缓冲区长度\n");
@@ -144,6 +164,9 @@ static bool make_token(char *e) {
 															}
 															break;
 														}
+					 case TK_REG: {
+													
+												}
           default: TODO();
         }
 

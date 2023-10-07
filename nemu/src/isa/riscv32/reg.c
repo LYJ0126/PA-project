@@ -30,5 +30,13 @@ void isa_reg_display() {//打印所有寄存器中的值
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
+	for(int i=0;i<32;++i){
+		if((strcmp(s,regs[i]))==0){
+			*success = true;
+			return gpr(i);
+		}
+	}
+	*success = false;
+	printf("NO register named \"%s\"\n",s);
   return 0;
 }
