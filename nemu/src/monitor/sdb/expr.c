@@ -278,13 +278,8 @@ long long eval(int p, int q)
 			 }
 		 }
 		 //下面分十进制数和十六进制数讨论
-		 //先判断是不是数,以及是否为空
 		 printf("flag:%d\n",flag);
 		 printf("%s\n",tokens[p].str);
-		 if(tokens[p].str[0]<48||tokens[p].str[0]>57){//不是数
-			 flag=false;
-			 return 0;
-		 }
 		 //十六进制:
 		 if(tokens[p].type==TK_HEX){
 			 uint32_t hexnum=0;
@@ -292,6 +287,10 @@ long long eval(int p, int q)
 			 return hexnum;
 		 }
 		 //十进制
+		 if(tokens[p].str[0]<48||tokens[p].str[0]>57){//不是数或为空
+        flag=false;
+        return 0;
+		 }
 		 int t=0;
 		 uint32_t num=0;
 		 while(t<32&&tokens[p].str[t]!='\0'){
