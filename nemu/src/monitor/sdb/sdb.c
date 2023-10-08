@@ -100,7 +100,7 @@ static int cmd_si(char *args){
 	int N=0;
 	if(args==NULL) N=1;
 	else {
-		N = atoi(args);
+		sscanf(args,"%d",&N);
 	}
 	cpu_exec((uint64_t)N);//cpu_exec在nemu/src/cpu中
 	return 0;
@@ -124,10 +124,19 @@ static int cmd_info(char *args){
 
 static int cmd_x(char *args){
 	uint32_t N;
-	char expression[400];
-	sscanf(args,"%u%s",&N,expression);
+	char* arg = strtok(args," ");
+	if(arg==NULL){
+		printf("缺少参数\n");
+		return 0;
+	}
+	sscanf(arg,"%u",&N);
+	char* arg2 = arg+strlen(arg)+1;
+	if(arg2==NULL){
+		printf("缺少参数\n");
+		return 0;
+	}
 	bool* exprright = (bool*)malloc(sizeof(exprright));
-	uint32_t addr = expr(expression,exprright);
+	uint32_t addr = expr(arg2,exprright);
 	if(*exprright==false){
 		free(exprright);
 		printf("表达式有误\n");
