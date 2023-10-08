@@ -129,7 +129,7 @@ static int cmd_x(char *args){
 	word_t value;
 	strcpy(temp,args);
 	sscanf(temp, "%u%x",&N,&addr);
-	int tempaddr;
+	uint32_t tempaddr;
 	for(uint32_t i=0;i<N;i++){
 		tempaddr=addr+4*i;
 		value = paddr_read(tempaddr, 4);
