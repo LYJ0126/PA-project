@@ -278,8 +278,6 @@ long long eval(int p, int q)
 			 }
 		 }
 		 //下面分十进制数和十六进制数讨论
-		 printf("flag:%d\n",flag);
-		 printf("%s\n",tokens[p].str);
 		 //十六进制:
 		 if(tokens[p].type==TK_HEX){
 			 uint32_t hexnum=0;
