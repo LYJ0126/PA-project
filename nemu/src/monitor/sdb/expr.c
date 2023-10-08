@@ -60,7 +60,7 @@ static struct rule {
 	{"\\|\\|",TK_OR},			// or
 	{"\\$[a-z,A-Z]*[0-9]*",TK_REG},// register
 //	{"==", TK_EQ},        // equal
-	{"0x[0-9,a-z,A-Z]",TK_HEX}, //hex number
+	{"0x[0-9,a-z,A-Z]+",TK_HEX}, //hex number
   {"[0-9]+",TK_NUMBER},   // number
 };
 
@@ -179,7 +179,7 @@ static bool make_token(char *e) {
 													else {
 														tokens[nr_token].type = TK_HEX;
 														for(int i=substr_len-1;i>=2;--i){//i到2即可,不需要把前两个"0x"记录进去
-															tokens[nr_token].str[i] = e[position-(substr_len-i)];
+															tokens[nr_token].str[i-2] = e[position-(substr_len-i)];
 														}
 														nr_token++;
 													}
@@ -291,7 +291,7 @@ long long eval(int p, int q)
 		 }
 		 //十进制
 		 int t=0;
-		 long long num=0;
+		 uint32_t num=0;
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
