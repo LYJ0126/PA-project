@@ -60,7 +60,7 @@ static struct rule {
 	{"\\|\\|",TK_OR},			// or
 	{"\\$[a-z,A-Z]*[0-9]*",TK_REG},// register
 //	{"==", TK_EQ},        // equal
-	{"0x[0-9,a-z,A-Z]+",TK_HEX}, //hex number
+	{"0[x,X][0-9,a-z,A-Z]+",TK_HEX}, //hex number
   {"[0-9]+",TK_NUMBER},   // number
 };
 
@@ -279,6 +279,8 @@ long long eval(int p, int q)
 		 }
 		 //下面分十进制数和十六进制数讨论
 		 //先判断是不是数,以及是否为空
+		 printf("flag:%d\n",flag);
+		 printf("%s\n",tokens[p].str);
 		 if(tokens[p].str[0]<48||tokens[p].str[0]>57){//不是数
 			 flag=false;
 			 return 0;
