@@ -124,12 +124,18 @@ static int cmd_info(char *args){
 
 static int cmd_x(char *args){
 	uint32_t N;
-	uint32_t addr;
-	char temp[100];
-	word_t value;
-	strcpy(temp,args);
-	sscanf(temp, "%u%x",&N,&addr);
-	uint32_t tempaddr;
+	char expression[400];
+	sscanf(args,"%u%s",&N,expression);
+	bool* exprright = (bool*)malloc(sizeof(exprright));
+	uint32_t addr = expr(expression,exprright);
+	if(*exprright==false){
+		free(exprright);
+		printf("表达式有误\n");
+		return 0;
+	}
+	free(exprright);
+	uint32_t tempaddr = 0;
+	uint32_t value = 0;
 	for(uint32_t i=0;i<N;i++){
 		tempaddr=addr+4*i;
 		value = paddr_read(tempaddr, 4);
