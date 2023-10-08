@@ -14,12 +14,13 @@
 ***************************************************************************************/
 
 #include <isa.h>
-
+#include <memory/paddr.h> 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
 
+extern word_t paddr_read(paddr_t addr, int len);
 enum {
   TK_NOTYPE = 256, TK_EQ,
   /* TODO: Add more token types */
@@ -101,7 +102,7 @@ static bool make_token(char *e) {
 
   while (e[position]!='\0') {
     /* Try all rules one by one. */
-		if(nr_token>31){
+		if(nr_token>30){
 			printf("输入表达式的token数超过了缓冲区长度\n");
 			return false;
 		}
@@ -156,7 +157,7 @@ static bool make_token(char *e) {
 											nr_token++;
 											break;
 					case TK_REG:{
-											 if(substr_len-1>32){
+											 if(substr_len-1>31){
 												 printf("输入的寄存器名字串长度超过了缓冲区长度\n");
 												 return false;
 											 }
@@ -165,13 +166,13 @@ static bool make_token(char *e) {
 															for(int i=substr_len-1;i>0;i++){//i到1即可,不需要把第一个'$'记录进去
 																tokens[nr_token].str[i-1]=e[position-(substr_len-i)];
 															}
-															if(substr_len-1<32) tokens[nr_token].str[substr_len-1]='\0';
+														  tokens[nr_token].str[substr_len-1]='\0';
 															nr_token++;
 											 }
 											 break;
 											} 
 					case TK_HEX: {	
-													if(substr_len-2>32){
+													if(substr_len-2>31){
 														printf("输出的数长度超过了缓冲区长度\n");
 														return false;
 													}
@@ -180,15 +181,13 @@ static bool make_token(char *e) {
 														for(int i=substr_len-1;i>=2;--i){//i到2即可,不需要把前两个"0x"记录进去
 															tokens[nr_token].str[i] = e[position-(substr_len-i)];
 														}
-														if(substr_len-2<32){
-															tokens[nr_token].str[substr_len-2]='\0';
-														}
+														tokens[nr_token].str[substr_len-2]='\0';
 														nr_token++;
 													}
 													break;
 											 }
 					case TK_NUMBER: {
-															if(substr_len>32){
+															if(substr_len>31){
 																printf("输入的数长度超过了缓冲区长度\n");
 																return false;
 															}
@@ -197,9 +196,7 @@ static bool make_token(char *e) {
 																for(int i=substr_len-1;i>=0;i--){
 																	tokens[nr_token].str[i]=e[position-(substr_len-i)];
 																}
-																if(substr_len<32){
-																	tokens[nr_token].str[substr_len]='\0';
-																}
+																tokens[nr_token].str[substr_len]='\0';
 																nr_token++;
 															}
 															break;
@@ -268,10 +265,33 @@ long long eval(int p, int q)
      * For now this token should be a number.
      * Return the value of the number.
      */
+		 //先判断是否是访问寄存器
+		 if(tokens[p].type==TK_REG){
+			 bool* regexist = (bool*)malloc(sizeof(bool));
+			 uint32_t regnum = isa_reg_str2val(tokens[p].str,regexist);
+			 if(*regexist==false){
+				 flag=false;
+				 free(regexist);
+				 return 0;
+			 }
+			 else{
+				 free(regexist);
+				 return regnum;
+			 }
+		 }
+		 //下面分十进制数和十六进制数讨论
+		 //先判断是不是数,以及是否为空
 		 if(tokens[p].str[0]<48||tokens[p].str[0]>57){//不是数
 			 flag=false;
 			 return 0;
 		 }
+		 //十六进制:
+		 if(tokens[p].type==TK_HEX){
+			 uint32_t hexnum=0;
+			 sscanf(tokens[p].str,"%x",&hexnum);
+			 return hexnum;
+		 }
+		 //十进制
 		 int t=0;
 		 long long num=0;
 		 while(t<32&&tokens[p].str[t]!='\0'){
@@ -290,29 +310,69 @@ long long eval(int p, int q)
 		if(flag==false) return 0;//在上一步括号检测的时候发现不合法
 		int parmatch=0;//记录括号匹配情况
 		int op=(int)'@';
-		int level = 2;//当前最低优先级
+		int level = 6;//当前最低优先级,每次取最低优先级的运算符作为根
 		int oppos=p;//最低优先级的位置
 		for(int i=p;i<=q;i++){
 			if(tokens[i].type=='(') ++parmatch;
 			else if(tokens[i].type==')') --parmatch;
 			if(parmatch==0){
-				if(tokens[i].type==(int)'+'||tokens[i].type==(int)'-'){
-					level=1;
-					op=tokens[i].type;
-					oppos=i;
+				if(tokens[i].type==TK_OR){
+					level = 0;
+					op = tokens[i].type;
+					oppos = i;
+				}
+				else if(tokens[i].type==TK_AND){
+					if(level>=1){
+						level=1;
+						op = tokens[i].type;
+						oppos = i;
+					}
+				}
+				else if(tokens[i].type==TK_EQUAL||tokens[i].type==TK_NE||tokens[i].type==TK_LE){
+					if(level>=2){
+						level = 2;
+						op = tokens[i].type;
+						oppos = i;
+					}
+				}
+				else if(tokens[i].type==(int)'+'||tokens[i].type==(int)'-'){
+					if(level>=3){
+						level = 3;
+						op = tokens[i].type;
+						oppos = i;
+					}
 				}
 				else if(tokens[i].type==(int)'*'||tokens[i].type==(int)'/'){
-					if(level>=2){
-						level=2;
-						op=tokens[i].type;
-						oppos=i;
+					if(level>=4){
+						level = 4;
+						op = tokens[i].type;
+						oppos = i;
 					}
 				}
 			}
 		}
-		if(op==(int)'@'){//没有符合条件的运算符
-			flag=false;
-			return 0;
+		if(op==(int)'@'){//没有符合条件的算术以及逻辑运算符
+			//判断是否是一元运算符(解引用以及取负)
+			if(tokens[p].type==TK_NEGNUM){//取负
+				if(level>=5){
+					level = 5;
+					op = tokens[p].type;
+					oppos = p;
+					return -eval(oppos+1,q);
+				}
+			}
+			else if(tokens[p].type==TK_DEREF){//解引用
+				if(level>=5){
+					level = 5;
+					op = tokens[p].type;
+					oppos = p;
+					return paddr_read((uint32_t)eval(oppos+1,q),4);
+				}
+			}
+			else{
+				flag = false;
+				return 0;
+			}
 		}
 		long long val1 = eval(p,oppos-1);
 		long long val2 = eval(oppos+1,q);
@@ -323,8 +383,23 @@ long long eval(int p, int q)
 										 break;
 			case (int)'*': return val1*val2;
 										 break;
-			case (int)'/': return val1/val2;
+			case (int)'/': if(val2==0){
+												printf("除数为0,错误\n");
+												flag = false;
+												return 0;
+										 }
+										 return val1/val2;
 										 break;
+			case TK_EQUAL: return val1==val2;
+										 break;
+			case TK_NE: return val1!=val2;
+									break;
+			case TK_LE: return val1<=val2;
+									break;
+			case TK_AND: return val1&&val2;
+									 break;
+			case TK_OR: return val1||val2;
+									break;
 			default: assert(0);
 		}
 	}
