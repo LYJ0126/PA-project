@@ -156,7 +156,6 @@ static int cmd_x(char *args){
 static int cmd_p(char *args){
 	bool *suc = (bool *)malloc(sizeof(bool));
 	uint32_t tempvalue = expr(args, suc); 
-	printf("tempvalue:%u *suc:%d\n",tempvalue,*suc);
 	if(*suc == false) printf("表达式有误\n");
 	else printf("%u\n",tempvalue);
 	free(suc);

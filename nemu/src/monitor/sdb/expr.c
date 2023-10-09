@@ -256,8 +256,6 @@ bool check_parentheses(int p, int q)
 }
 long long eval(int p, int q)
 {
-	printf("p:%d q:%d\n",p,q);
-	printf("flag:%d\n",flag);
 	if(flag==false) return 0;
 	if(p>q){//Bad expression
 		flag=false;
@@ -296,7 +294,6 @@ long long eval(int p, int q)
 		 }
 		 int t=0;
 		 uint32_t num=0;
-		 printf("tokens[p].str:%s\n",tokens[p].str);
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
@@ -419,7 +416,6 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
 	long long vvalue = eval(0,nr_token-1);
-	printf("flag:%d vvlaue:%lld\n",flag,vvalue);
 	if(flag){
 		*success = true;
 		return (uint32_t)vvalue;
