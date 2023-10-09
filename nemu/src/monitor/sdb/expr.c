@@ -91,7 +91,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[128] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -103,7 +103,7 @@ static bool make_token(char *e) {
 
   while (e[position]!='\0') {
     /* Try all rules one by one. */
-		if(nr_token>30){
+		if(nr_token>126){
 			printf("输入表达式的token数超过了缓冲区长度\n");
 			return false;
 		}
