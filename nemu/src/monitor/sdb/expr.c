@@ -168,6 +168,7 @@ static bool make_token(char *e) {
 																tokens[nr_token].str[i-1]=e[position-(substr_len-i)];
 															}
 															nr_token++;
+															tokens[nr_token].str[substr_len-1]='\0';
 											 }
 											 break;
 											} 
@@ -182,6 +183,7 @@ static bool make_token(char *e) {
 															tokens[nr_token].str[i-2] = e[position-(substr_len-i)];
 														}
 														nr_token++;
+														tokens[nr_token].str[substr_len-2]='\0';
 													}
 													break;
 											 }
@@ -196,6 +198,7 @@ static bool make_token(char *e) {
 																	tokens[nr_token].str[i]=e[position-(substr_len-i)];
 																}
 																nr_token++;
+																tokens[nr_token].str[substr_len]='\0';
 															}
 															break;
 														}
@@ -293,13 +296,10 @@ long long eval(int p, int q)
 		 }
 		 int t=0;
 		 uint32_t num=0;
-		 printf("num:%u\n",num);
-		 printf("%s\n",tokens[p].str);
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
 		 }
-		 printf("num:%u\n",num);
 		 return num;
 	}
 	else if(check_parentheses(p, q) == true){
