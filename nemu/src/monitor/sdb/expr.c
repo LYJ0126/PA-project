@@ -294,6 +294,7 @@ long long eval(int p, int q)
 		 int t=0;
 		 uint32_t num=0;
 		 printf("num:%u\n",num);
+		 printf("%s\n",tokens[p].str);
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
