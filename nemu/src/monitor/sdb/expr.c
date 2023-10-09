@@ -297,6 +297,7 @@ long long eval(int p, int q)
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
 		 }
+		 printf("num:%u\n",num);
 		 return num;
 	}
 	else if(check_parentheses(p, q) == true){
