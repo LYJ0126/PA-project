@@ -49,11 +49,16 @@ static int cmd_q(char *args) {
 }
 
 word_t paddr_read(paddr_t addr, int len);
+void set_watchpoint(char* expression);
+void delete_watchpoint(int no);
+void sdb_watchpoint_display();
 static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
 
 static struct {
   const char *name;
@@ -69,6 +74,8 @@ static struct {
 	{"info","打印程序状态,格式为info SUBCMD, info r:打印寄存器状态,info w:打印监视点信息",cmd_info},//打印程序状态
 	{"x","扫描内存,格式为x N EXPR,求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节",cmd_x},//扫描内存
 	{"p","表达式求值,格式为p EXPR,求出表达式EXPR的值",cmd_p},//表达式求值
+	{"w","设置监视点,格式为w EXPR,求出表达式EXPR的值。当EXPR发生变化,暂停程序执行",cmd_w},//设置监视点
+	{"d","格式为d N,删除编号为N的监视点",cmd_d},//删除监视点
 };
 
 #define NR_CMD ARRLEN(cmd_table)//用宏定义NR_CMD为cmd_table的长度
@@ -117,7 +124,7 @@ static int cmd_info(char *args){
 		isa_reg_display();//打印所有寄存器中的值,该函数在nemu/src/isa/$ISA/reg.c中
 	}
 	else if(strcmp(arg,w)==0){
-		
+		sdb_watchpoint_display();	
 	}
 	return 0;
 }
@@ -159,6 +166,19 @@ static int cmd_p(char *args){
 	if(*suc == false) printf("表达式有误\n");
 	else printf("%u\n",tempvalue);
 	free(suc);
+	return 0;
+}
+
+static int cmd_w(char *args){
+	set_watchpoint(args);
+	return 0;
+}
+
+static int cmd_d(char *args){
+	if(args==NULL){
+		printf("未输入要删除的监视点编号");
+	}
+	else delete_watchpoint(atoi(args));
 	return 0;
 }
 

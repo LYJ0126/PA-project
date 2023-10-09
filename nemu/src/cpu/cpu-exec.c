@@ -31,6 +31,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 void device_update();
+word_t expr(char *e, bool *success);
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -38,6 +39,26 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
+	//扫描所有监视点
+/*	for(int i=0;i<NR_WP;++i){
+		if(wp_pool[i].used){
+			bool suc =false;
+			uint32_t tempnum = expr(wp_pool[i].exp,&suc);
+			if(suc){
+				if(tempnum!=wp_pool[i].old_value){
+					printf("监视点#%d的表达式的值已经改变\n",i);
+					printf("expr:   %s\n",wp_pool[i].exp);
+					printf("old value:   %u\n",wp_pool[i].old_value);
+					printf("new value:   %u\n",tempnum);
+					wp_pool[i].old_value = tempnum;//更新
+					nemu_state.state = NEMU_STOP;//暂停
+				}
+			}
+			else{
+				printf("expression error!\n");
+			}
+		}
+	}*/
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {//cpu单步执行

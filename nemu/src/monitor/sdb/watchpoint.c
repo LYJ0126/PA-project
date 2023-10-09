@@ -22,6 +22,9 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
+	char exp[128];
+	uint32_t old_value;
+	bool used;//用于在trace_and_difftest函数中判断是否需要检测该监视点
 
 } WP;
 
@@ -33,6 +36,7 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
+		wp_pool[i].used = false;
   }
 
   head = NULL;
@@ -41,3 +45,103 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+WP* new_wp(){
+	if(free_==NULL){
+		printf("没有空闲的监视点了\n");
+		return NULL;
+	}
+	WP* temp = free_;
+	free_ = free_->next;
+	if(head==NULL){
+		head = temp;
+		head->next = NULL;
+	}
+	else{
+		temp->next = head;
+		head = temp;
+	}
+	head->used = true;
+	return head;
+}
+
+void free_wp(WP* wp){
+	//先检查wp是不是在链表head中
+	WP* p = head;
+	bool exist = false;
+	while(p!=NULL){
+		if(p->NO==wp->NO){
+			exist = true;
+			break;
+		}
+		p = p->next;
+	}
+	if(head==NULL) exist = false;
+	if(!exist){
+		printf("设置的监视点中并没有编号为#%d的\n",wp->NO);
+		return;
+	}
+	if(p->NO==head->NO){
+		head = head->next;
+		p->next = free_;
+		free_ = p;
+	}
+	else{
+		WP* parent = head;
+		while(parent->next!=p) parent = parent->next;
+		parent->next=parent->next->next;
+		p->next = free_;
+		free_ = p;
+	}
+	free_->used = false;
+	printf("删除监视点#%d\n",wp->NO);
+}
+
+void set_watchpoint(char* expression){
+	WP* p = new_wp();
+	if(p==NULL) return;
+	if(strlen(expression)>127){
+		printf("表达式过长\n");
+		return;
+	}
+	strcpy(p->exp,expression);
+	bool* success = (bool*)malloc(sizeof(bool));
+	uint32_t tmp = expr(expression,success);
+	if(success){
+		p->old_value = tmp;
+		printf("创建监视点 #%d\n",p->NO);
+		printf("expr: %s\n",p->exp);
+		printf("old value: %u\n", tmp);
+	}
+	else{
+		printf("创建监视点失败\n");
+	}
+	free(success);
+	return;
+}
+
+void delete_watchpoint(int no)
+{
+		if(no<0||no>31){
+			printf("没有编号为#%d的监视点\n",no);
+			return;
+		}
+		for(int i=0;i<32;++i){
+			if(wp_pool[i].NO == no){
+				free_wp(&wp_pool[i]);
+				break;
+			}
+		}
+		return;
+}
+
+void sdb_watchpoint_display()
+{
+	WP* cur = head;
+	if(cur==NULL){
+		printf("没有监视点\n");
+	}
+	while(cur!=NULL){
+		printf("number:%3d\t expr:%s\t old value:%u\t\n",cur->NO,cur->exp,cur->old_value);
+		cur = cur->next;
+	}
+}
