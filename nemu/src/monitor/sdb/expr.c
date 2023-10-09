@@ -167,8 +167,8 @@ static bool make_token(char *e) {
 															for(int i=substr_len-1;i>0;--i){//i到1即可,不需要把第一个'$'记录进去
 																tokens[nr_token].str[i-1]=e[position-(substr_len-i)];
 															}
-															nr_token++;
 															tokens[nr_token].str[substr_len-1]='\0';
+															nr_token++;
 											 }
 											 break;
 											} 
@@ -182,8 +182,8 @@ static bool make_token(char *e) {
 														for(int i=substr_len-1;i>=2;--i){//i到2即可,不需要把前两个"0x"记录进去
 															tokens[nr_token].str[i-2] = e[position-(substr_len-i)];
 														}
-														nr_token++;
 														tokens[nr_token].str[substr_len-2]='\0';
+														nr_token++;
 													}
 													break;
 											 }
@@ -197,8 +197,8 @@ static bool make_token(char *e) {
 																for(int i=substr_len-1;i>=0;--i){
 																	tokens[nr_token].str[i]=e[position-(substr_len-i)];
 																}
-																nr_token++;
 																tokens[nr_token].str[substr_len]='\0';
+																nr_token++;
 															}
 															break;
 														}
@@ -296,6 +296,7 @@ long long eval(int p, int q)
 		 }
 		 int t=0;
 		 uint32_t num=0;
+		 printf("tokens[p].str:%s\n",tokens[p].str);
 		 while(t<32&&tokens[p].str[t]!='\0'){
 			 num=num*10+(tokens[p].str[t]-'0');
 			 t++;
