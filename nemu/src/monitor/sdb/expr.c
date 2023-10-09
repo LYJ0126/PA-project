@@ -376,7 +376,6 @@ long long eval(int p, int q)
 		}
 		long long val1 = eval(p,oppos-1);
 		long long val2 = eval(oppos+1,q);
-		printf("val1:%lld val2:%lld\n",val1,val2);
 		switch(op){
 			case (int)'+': return val1+val2;
 										 break;
