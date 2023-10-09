@@ -254,7 +254,7 @@ bool check_parentheses(int p, int q)
 	}
 	return flag2;
 }
-long long eval(int p, int q)
+uint32_t eval(int p, int q)
 {
 	if(flag==false) return 0;
 	if(p>q){//Bad expression
@@ -374,8 +374,8 @@ long long eval(int p, int q)
 				return 0;
 			}
 		}
-		long long val1 = eval(p,oppos-1);
-		long long val2 = eval(oppos+1,q);
+		uint32_t val1 = eval(p,oppos-1);
+		uint32_t val2 = eval(oppos+1,q);
 		switch(op){
 			case (int)'+': return val1+val2;
 										 break;
@@ -414,7 +414,7 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-	long long vvalue = eval(0,nr_token-1);
+	uint32_t vvalue = eval(0,nr_token-1);
 	if(flag){
 		*success = true;
 		return (uint32_t)vvalue;
