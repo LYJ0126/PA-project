@@ -358,7 +358,7 @@ uint32_t eval(int p, int q)
 					level = 5;
 					op = tokens[p].type;
 					oppos = p;
-					return -eval(oppos+1,q);
+					return 0-eval(oppos+1,q);
 				}
 			}
 			else if(tokens[p].type==TK_DEREF){//解引用
