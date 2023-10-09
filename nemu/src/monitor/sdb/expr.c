@@ -253,6 +253,8 @@ bool check_parentheses(int p, int q)
 }
 long long eval(int p, int q)
 {
+	printf("p:%d q:%d\n",p,q);
+	printf("flag:%d\n",flag);
 	if(flag==false) return 0;
 	if(p>q){//Bad expression
 		flag=false;
@@ -373,6 +375,7 @@ long long eval(int p, int q)
 		}
 		long long val1 = eval(p,oppos-1);
 		long long val2 = eval(oppos+1,q);
+		printf("val1:%lld val2:%lld\n",val1,val2);
 		switch(op){
 			case (int)'+': return val1+val2;
 										 break;
@@ -412,6 +415,7 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
 	long long vvalue = eval(0,nr_token-1);
+	printf("flag:%d vvlaue:%lld\n",flag,vvalue);
 	if(flag){
 		*success = true;
 		return (uint32_t)vvalue;
