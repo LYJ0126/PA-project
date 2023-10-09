@@ -58,7 +58,7 @@ static struct rule {
 	{"\\<\\=",TK_LE},			// less than or equal
 	{"\\&\\&",TK_AND},		// and
 	{"\\|\\|",TK_OR},			// or
-	{"\\$[a-z,A-Z]*[0-9]*",TK_REG},// register
+	{"\\$[$,a-z,A-Z]*[0-9]*",TK_REG},// register
 //	{"==", TK_EQ},        // equal
 	{"0[x,X][0-9,a-f,A-F]+",TK_HEX}, //hex number
   {"[0-9]+",TK_NUMBER},   // number
