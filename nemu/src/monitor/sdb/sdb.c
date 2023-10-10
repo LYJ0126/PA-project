@@ -104,10 +104,10 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args){
-	int N=0;
+	uint64_t N=0;
 	if(args==NULL) N=1;
 	else {
-		sscanf(args,"%d",&N);
+		sscanf(args,"%lu",&N);
 	}
 	cpu_exec((uint64_t)N);//cpu_exec在nemu/src/cpu中
 	return 0;

@@ -161,5 +161,6 @@ void scan_watchpoint()
         else{
           printf("expression error!\n");
         }
+				cur = cur->next;
 	}
 }
