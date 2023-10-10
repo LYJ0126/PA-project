@@ -22,4 +22,5 @@ word_t expr(char *e, bool *success);
 void set_watchpoint(char* expression);
 void delete_watchpoint(int no);
 void sdb_watchpoint_display();
+void scan_watchpoint();
 #endif

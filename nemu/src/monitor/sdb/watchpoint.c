@@ -24,7 +24,6 @@ typedef struct watchpoint {
   /* TODO: Add more members if necessary */
 	char exp[128];
 	uint32_t old_value;
-	bool used;//用于在trace_and_difftest函数中判断是否需要检测该监视点
 
 } WP;
 
@@ -36,7 +35,6 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
-		wp_pool[i].used = false;
   }
 
   head = NULL;
@@ -60,7 +58,6 @@ WP* new_wp(){
 		temp->next = head;
 		head = temp;
 	}
-	head->used = true;
 	return head;
 }
 
@@ -92,7 +89,6 @@ void free_wp(WP* wp){
 		p->next = free_;
 		free_ = p;
 	}
-	free_->used = false;
 	printf("删除监视点#%d\n",wp->NO);
 }
 
@@ -143,5 +139,27 @@ void sdb_watchpoint_display()
 	while(cur!=NULL){
 		printf("number:%3d\t expr:%s\t old value:%u\t\n",cur->NO,cur->exp,cur->old_value);
 		cur = cur->next;
+	}
+}
+
+void scan_watchpoint()
+{
+	WP* cur = head;
+	while(cur!=NULL){
+		bool suc =false;
+        uint32_t tempnum = expr(cur->exp,&suc);
+        if(suc){
+          if(tempnum!=cur->old_value){
+            printf("监视点#%d的表达式的值已经改变\n",cur->NO);
+            printf("expr:   %s\n",cur->exp);
+            printf("old value:   %u\n",cur->old_value);
+            printf("new value:   %u\n",tempnum);
+            cur->old_value = tempnum;//更新
+            nemu_state.state = NEMU_STOP;//暂停
+          }
+        }
+        else{
+          printf("expression error!\n");
+        }
 	}
 }
