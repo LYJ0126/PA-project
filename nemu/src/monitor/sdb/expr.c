@@ -217,13 +217,13 @@ static bool make_token(char *e) {
 	//对负数,解引用的特殊处理
 	//判断是否是解引用
 	for(int i=0;i<nr_token;i++){
-		if(tokens[i].type==(int)'*'&&(i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_HEX&&tokens[i-1].type!=(int)')'))){
+		if(tokens[i].type==(int)'*'&&(i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_HEX&&tokens[i-1].type!=(int)')'&&tokens[i-1].type!=TK_REG))){
 			tokens[i].type = TK_DEREF;
 		}
 	}
 	//判断是否是负数
 	for(int i=0;i<nr_token;i++){
-		if(tokens[i].type==(int)'-'&&(i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_HEX&&tokens[i-1].type!=(int)')'))){
+		if(tokens[i].type==(int)'-'&&(i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_HEX&&tokens[i-1].type!=(int)')'&&tokens[i-1].type!=TK_REG))){
 			tokens[i].type = TK_NEGNUM;
 		}
 	}
