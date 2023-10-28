@@ -38,23 +38,24 @@ char *strncpy(char *dst, const char *src, size_t n) {
 			n--;
 		}
 	}
+	*dst = '\0';
 	return ret;
 }
 
 char *strcat(char *dst, const char *src) {
-	char *p = dst;
-	while(*p++ != '\0'){;}
-	while(*src != '\0'){
-		*p = *src;
-		p++;
+	char* ret = dst;
+	while (*dst != '\0') { dst++; }
+	while (*src != '\0') {
+		*dst = *src;
+		dst++;
 		src++;
 	}
-	*p='\0';
-	return dst;
+	*dst = '\0';
+	return ret;
 }
 
 int strcmp(const char *s1, const char *s2) {
-	while(*s1 != '\0' && (*s1==*s2)) {
+	while(*s1 != '\0' && *s2 != '\0' && (*s1==*s2)) {
       s1++;
       s2++;
   }
@@ -67,7 +68,7 @@ int strcmp(const char *s1, const char *s2) {
 
 int strncmp(const char *s1, const char *s2, size_t n) {
 	if(n==0) return 0;
-	while(n-- && *s1!='\0' &&*s1==*s2){
+	while(n-- && *s1!='\0' && *s2!='\0' &&*s1==*s2){
 		s1++;
 		s2++;
 	}
@@ -79,22 +80,26 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 }
 
 void *memset(void *s, int c, size_t n) {
-	if(s==NULL || n<0){
-		return NULL;
-	}
 	char *p=(char *)s;
 	while(n--){
 		*p++ = c;
 	}
-	*p='\0';
 	return s;
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-	for (int i = n; i >= 0; --i) {
-		*((char*)dst + i) = *((char*)src + i);
+	void *ret = dst;
+	if(dst<=src || dst>=src+n){
+		for(int i=0; i<n; ++i){
+			*((char*)dst+i) = *((char*)src+i);
+		}
 	}
-	return dst;
+	else{
+		for (int i = n-1; i >= 0; --i) {
+			*((char*)dst + i) = *((char*)src + i);
+		}
+	}
+	return ret;
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
@@ -105,10 +110,11 @@ void *memcpy(void *out, const void *in, size_t n) {
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
-	assert(s1!=NULL&&s2!=NULL&&n>0);
-	const char *p=s1;
-	const char *t=s2;
-	while(n-- && *p==*t){
+	assert(s1!=NULL&&s2!=NULL&&n>=0);
+	if(n==0) return 0;
+	const char *p = (char*)s1;
+	const char *t = (char*)s2;
+	while(--n && *p==*t){
 		p++;
 		t++;
 	}
