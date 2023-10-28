@@ -33,6 +33,7 @@ void scan_watchpoint();
 
 void device_update();
 word_t expr(char *e, bool *success);
+void show_former_insts();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -96,6 +97,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+	show_former_insts();
   isa_reg_display();
   statistic();
 }
