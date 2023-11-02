@@ -60,7 +60,7 @@ int sprintf(char* out, const char* fmt, ...)
 			case 'c': *out++ = va_arg(ap,int); break;
 			case '%': *out++ = va_arg(ap,int); break;
 			case 's': {
-				char* temp = va_arg(ap, char*); break;
+				char* temp = va_arg(ap, char*);
 				strcpy(out, temp);
 				out += strlen(out);
 				break;
