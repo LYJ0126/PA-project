@@ -18,7 +18,7 @@
 
 #include <cpu/difftest.h>
 
-typedef void(*io_callback_t)(uint32_t, int, bool);
+typedef void(*io_callback_t)(uint32_t, int, bool);//回调函数
 uint8_t* new_space(int size);
 
 typedef struct {
@@ -26,7 +26,7 @@ typedef struct {
   // we treat ioaddr_t as paddr_t here
   paddr_t low;
   paddr_t high;
-  void *space;
+  void *space;//映射目标空间
   io_callback_t callback;
 } IOMap;
 

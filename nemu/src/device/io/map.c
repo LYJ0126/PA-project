@@ -32,7 +32,7 @@ uint8_t* new_space(int size) {
   return p;
 }
 
-static void check_bound(IOMap *map, paddr_t addr) {
+static void check_bound(IOMap *map, paddr_t addr) {//检查map是否为空，以及访问地址addr是否超出映射范围
   if (map == NULL) {
     Assert(map != NULL, "address (" FMT_PADDR ") is out of bound at pc = " FMT_WORD, addr, cpu.pc);
   } else {
@@ -55,7 +55,7 @@ void init_map() {
 word_t map_read(paddr_t addr, int len, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
-  paddr_t offset = addr - map->low;
+  paddr_t offset = addr - map->low;//偏移量
   invoke_callback(map->callback, offset, len, false); // prepare data to read
   word_t ret = host_read(map->space + offset, len);
   return ret;
