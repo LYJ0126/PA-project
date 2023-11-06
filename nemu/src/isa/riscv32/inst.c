@@ -18,7 +18,6 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
-void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -119,41 +118,8 @@ static int decode_exec(Decode *s) {
   return 0;
 }
 
-#define bufsize 16
-static bool full=false;//检查iringbuf是否已经装满(即开始出现循环)
-typedef struct{
-	uint32_t pc;
-	uint32_t inst;
-}tracepoint;
-
-tracepoint iringbuf[bufsize];
-static int pos=0;
-void add_inst_to_iringbuf(uint32_t pc, uint32_t inst){
-	iringbuf[pos].pc = pc;
-	iringbuf[pos].inst = inst;
-	pos = (pos+1)%bufsize;
-	if(pos == 0) full = true;//已经一轮循环了
-}
-
-void show_former_insts(){
-	if(!full && pos==0) return;//没有记录指令
-	int till = pos, from=0;
-	printf("此前指令有:\n");
-	if(full) from = pos;
-	char templogbuf[128];
-	char *p;
-	do{
-		p = templogbuf;
-		p += sprintf(templogbuf, "%s" FMT_WORD ": %08x", from==till?" --> ":"     ",iringbuf[from].pc,iringbuf[from].inst);
-		disassemble(p, templogbuf+sizeof(templogbuf)-p, iringbuf[from].pc, (uint8_t*)&iringbuf[from].inst, 4);
-		puts(templogbuf);
-		from = (from+bufsize-1)%bufsize;
-	}while(from!=till);
-}
-
 
 int isa_exec_once(Decode *s) {
   s->isa.inst.val = inst_fetch(&s->snpc, 4);//*snpc=*snpc+4;前面有s->snpc=pc;pc=cup.pc
-	IFDEF(CONFIG_ITRACE, add_inst_to_iringbuf(s->pc, s->isa.inst.val));
   return decode_exec(s);
 }
