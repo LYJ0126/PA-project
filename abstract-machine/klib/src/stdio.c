@@ -33,12 +33,43 @@ uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign)//整�
 	return i;
 }
 
-int printf(const char *fmt, ...) {
-  panic("Not implemented");
+int printf(const char* fmt, ...) {
+	char buffer[256];//缓冲区
+	va_list ap;
+	va_start(ap, fmt);
+	int ret = vsprintf(buffer, fmt, ap);
+	va_end(ap);
+	for (int i = 0; i < ret; ++i) putch(buffer[i]);
+	return ret;
 }
 
-int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
+int vsprintf(char* out, const char* fmt, va_list ap) {
+	char* start = out;
+	while (*fmt != '\0') {
+		if (*fmt != '%') *out++ = *fmt;
+		else {
+			fmt++;
+			switch (*fmt) {
+			       case 'd': out += itoa(va_arg(ap, int), out, 10, 0, 1); break;
+			       case 'i': out += itoa(va_arg(ap, int), out, 10, 0, 1); break;
+			       case 'u': out += itoa(va_arg(ap, uint32_t), out, 10, 0, 0); break;
+			       case 'o': out += itoa(va_arg(ap, uint32_t), out, 8, 0, 0); break;
+			       case 'x': out += itoa(va_arg(ap, uint32_t), out, 16, 0, 0); break;
+			       case 'X': out += itoa(va_arg(ap, uint32_t), out, 16, 1, 0); break;
+			       case 'c': *out++ = va_arg(ap, int); break;
+			       case '%': *out++ = va_arg(ap, int); break;
+			       case 's': {
+				         char* temp = va_arg(ap, char*);
+				         strcpy(out, temp);
+				         out += strlen(out);
+				         break;
+				   }
+			}
+		}
+		fmt++;
+	}
+	* out = '\0';
+	return out - start;
 }
 
 int sprintf(char* out, const char* fmt, ...)
