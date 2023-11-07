@@ -20,7 +20,13 @@ uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int wi
 		n /= radix;
 	} while (n);
 	//下面要判断精度问题
-	if(precision>i)	while(i<precision) tempstr[i++] = '0';//当precision比当前长度大时，要补上高位0
+	//当precision比当前数长度大时(注意是数，不包含负号的)，要补上高位0
+	if (tempstr[0] == '-') {
+		if (precision + 1 > i) while (i <= precision) tempstr[i++] = '0';
+	}
+	else {
+		if (precision > i) while (i < precision) tempstr[i++] = '0';
+	}
 	tempstr[i] = '\0';
 	//反序
 	if (tempstr[0] == '-') k = 1;
@@ -34,10 +40,11 @@ uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int wi
 		--j;
 	}
 	int ret = i;
-	if(width>i){//当width大于后面串长时,要补空格
-		while(width>i){
+	int tempww = width;
+	if(tempww>i){//当width大于后面串长时,要补空格
+		while(tempww>i){
 			*str++ = ' ';
-			width--;
+			tempww--;
 		}
 		ret = width;
 	}
