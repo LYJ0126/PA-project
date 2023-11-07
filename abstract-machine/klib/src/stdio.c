@@ -5,9 +5,8 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)//没有定义使用native
 
-uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int width, int precision)//整数转字符串(不限制是有符号还是无符号)
+uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int width, int precision, int fillzero)//整数转字符串(不限制是有符号还是无符号)
 {
-	assert(radix <= 16 && radix >= 2);
 	char tempstr[128];//由于存在宽度的问题，后面可能调整
 	int i = 0, rem, k = 0;
 	if (radix == 10  && sign==1 && (n >> 31)) {//十进制有符号数且为负数
@@ -43,7 +42,7 @@ uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int wi
 	int tempww = width;
 	if(tempww>i){//当width大于后面串长时,要补空格
 		while(tempww>i){
-			*str++ = ' ';
+			*str++ = fillzero==1? '0' : ' ';//判断是补0还是补上1
 			tempww--;
 		}
 		ret = width;
@@ -64,11 +63,15 @@ int printf(const char* fmt, ...) {
 
 int vsprintf(char* out, const char* fmt, va_list ap) {
 	char* start = out;
-	int width=0,precision=0;//宽度和精度
+	int width=0,precision=0,fillzero=0;//宽度和精度以及宽度是否是补0
 	while (*fmt != '\0') {
     if (*fmt != '%') *out++ = *fmt;
 		else {
       fmt++;
+			if(*fmt == '0'){
+				fillzero = 1;
+				fmt++;
+			}//宽度补0
       if(*fmt>='0'&&*fmt<='9'){//确定宽度
         int ww=0;
         while(*fmt>='0'&&*fmt<='9'){
@@ -82,6 +85,7 @@ int vsprintf(char* out, const char* fmt, va_list ap) {
 				fmt++;
       }
       if(*fmt == '.'){//确定精度
+				fillzero = 0;//后面有精度，宽度补空格
 				fmt++;
         if(*fmt>='0' && *fmt<='9'){
 					int pp=0;
@@ -97,12 +101,12 @@ int vsprintf(char* out, const char* fmt, va_list ap) {
 				}
       }
       switch (*fmt) {
-       case 'd': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision); break;
-       case 'i': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision); break;
-       case 'u': out += itoa(va_arg(ap, uint32_t), out, 10, 0, 0, width, precision); break;
-       case 'o': out += itoa(va_arg(ap, uint32_t), out, 8, 0, 0, width, precision); break;
-       case 'x': out += itoa(va_arg(ap, uint32_t), out, 16, 0, 0, width, precision); break;
-       case 'X': out += itoa(va_arg(ap, uint32_t), out, 16, 1, 0, width, precision); break;
+       case 'd': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision, fillzero); break;
+       case 'i': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision, fillzero); break;
+       case 'u': out += itoa(va_arg(ap, uint32_t), out, 10, 0, 0, width, precision, fillzero); break;
+       case 'o': out += itoa(va_arg(ap, uint32_t), out, 8, 0, 0, width, precision, fillzero); break;
+       case 'x': out += itoa(va_arg(ap, uint32_t), out, 16, 0, 0, width, precision, fillzero); break;
+       case 'X': out += itoa(va_arg(ap, uint32_t), out, 16, 1, 0, width, precision, fillzero); break;
        case 'c': *out++ = va_arg(ap,int); break;
        case '%': *out++ = va_arg(ap,int); break;
        case 's': {
@@ -118,8 +122,9 @@ int vsprintf(char* out, const char* fmt, va_list ap) {
        }
       }
 			//复位
-			width=0;
-			precision=0;
+			width = 0;
+			precision = 0;
+			fillzero = 0;
      }
      fmt++;
    }
@@ -132,11 +137,15 @@ int sprintf(char* out, const char* fmt, ...)
 	char* start = out;
 	va_list ap;
 	va_start(ap, fmt);
-	int width=0,precision=0;//宽度和精度
+	int width=0,precision=0,fillzero=0;//宽度和精度以及宽度是否是补0
 	while (*fmt != '\0') {
 		if (*fmt != '%') *out++ = *fmt;
 		else {
 			fmt++;
+			if(*fmt=='0') {
+				fillzero = 1;
+				fmt++;
+				}//宽度补0
 			if(*fmt>='0'&&*fmt<='9'){//确定宽度
 				int ww=0;
 				while(*fmt>='0'&&*fmt<='9'){
@@ -150,6 +159,7 @@ int sprintf(char* out, const char* fmt, ...)
 				fmt++;
 			}
 			if(*fmt == '.'){//确定精度
+				fillzero = 0;//当存在精度的时候，宽度补空格
 				fmt++;
 				if(*fmt>='0' && *fmt<='9'){
 					int pp=0;
@@ -165,12 +175,12 @@ int sprintf(char* out, const char* fmt, ...)
 				}
 			}
 			switch (*fmt) {
-			case 'd': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision); break;
-			case 'i': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision); break;
-			case 'u': out += itoa(va_arg(ap, uint32_t), out, 10, 0, 0, width, precision); break;
-			case 'o': out += itoa(va_arg(ap, uint32_t), out, 8, 0, 0, width, precision); break;
-			case 'x': out += itoa(va_arg(ap, uint32_t), out, 16, 0, 0, width, precision); break;
-			case 'X': out += itoa(va_arg(ap, uint32_t), out, 16, 1, 0, width, precision); break;
+			case 'd': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision, fillzero); break;
+			case 'i': out += itoa(va_arg(ap, int), out, 10, 0, 1, width, precision, fillzero); break;
+			case 'u': out += itoa(va_arg(ap, uint32_t), out, 10, 0, 0, width, precision, fillzero); break;
+			case 'o': out += itoa(va_arg(ap, uint32_t), out, 8, 0, 0, width, precision, fillzero); break;
+			case 'x': out += itoa(va_arg(ap, uint32_t), out, 16, 0, 0, width, precision, fillzero); break;
+			case 'X': out += itoa(va_arg(ap, uint32_t), out, 16, 1, 0, width, precision, fillzero); break;
 			case 'c': *out++ = va_arg(ap,int); break;
 			case '%': *out++ = va_arg(ap,int); break;
 			case 's': {
@@ -186,8 +196,9 @@ int sprintf(char* out, const char* fmt, ...)
 			}
 			}
 			//记得复位
-			width=0;
-			precision=0;
+			width = 0;
+			precision = 0;
+			fillzero = 0;
 		}
 		fmt++;
 	}
