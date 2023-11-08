@@ -74,11 +74,16 @@ static inline void update_screen() {
 void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
+	uint32_t sync = vgactl_port_base[1];//AM中有SYNC_ADDR=VGACTL_ADDR+4
+	if(sync>0){
+		update_screen();
+		vgactl_port_base[1]=0;
+	}
 }
 
 void init_vga() {
   vgactl_port_base = (uint32_t *)new_space(8);
-  vgactl_port_base[0] = (screen_width() << 16) | screen_height();
+  vgactl_port_base[0] = (screen_width() << 16) | screen_height();//vgactl_port_base[0]存放屏幕宽度和高度，各2byte，对应AM中的VGACTL_ADDR
 #ifdef CONFIG_HAS_PORT_IO
   add_pio_map ("vgactl", CONFIG_VGA_CTL_PORT, vgactl_port_base, 8, NULL);
 #else
