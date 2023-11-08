@@ -25,11 +25,11 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
 	int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;//起点(x,y),以此为起点填充一个h*w的矩形区域
 	uint32_t wh = inl(VGACTL_ADDR);
   uint32_t width = wh >> 16;
-  uint32_t height = wh & 0x0000ffff;
+  //uint32_t height = wh & 0x0000ffff;
   //assert(x>=0 && y>=0 && x+w<=width && y+h<=height);
-  if (x<0 || y<0 || x + w>width || y + h>height) return;
+	//if (x<0 || y<0 || x + w>width || y + h>height) return;
 	if(!ctl->sync){//写入缓冲区
-		uint32_t * fb = (uint32_t*)FB_ADDR;
+		uint32_t * fb = (uint32_t*)(uintptr_t)FB_ADDR;
     for (int i = 0; i < h; ++i) {
 			for (int j = 0; j < w; ++j) {
 				fb[width * (y + i) + (x + j)] = ((uint32_t*)ctl->pixels)[i * w + j];
