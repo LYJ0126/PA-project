@@ -4,12 +4,12 @@
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
 void __am_gpu_init() {
-	int i;
+/*	int i;
   int w = 400;  // TODO: get the correct width
   int h = 300;  // TODO: get the correct height
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   for (i = 0; i < w * h; i ++) fb[i] = i;
-  outl(SYNC_ADDR, 1);
+  outl(SYNC_ADDR, 1);*/
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
@@ -23,6 +23,17 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   if (ctl->sync) {
+		int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;//起点(x,y),以此为起点填充一个h*w的矩形区域
+		uint32_t wh = inl(VGACTL_ADDR);
+		int width = wh>>16;
+		//int height = wh & 0x0000ffff;
+		//assert(x>=0 && y>=0 && x+w<=width && y+h<=height);
+		uint32_t *fb = (uint32_t *)FB_ADDR;
+		for(int i=0;i<h;++i){
+			for(int j=0;j<w;++j){
+				fb[width*(y+i)+(x+j)] = ((uint32_t *)ctl->pixels)[i*w+j];
+			}
+		}
     outl(SYNC_ADDR, 1);
   }
 }
