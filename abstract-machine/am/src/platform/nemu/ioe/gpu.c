@@ -22,18 +22,21 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-  if (ctl->sync) {
-		int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;//起点(x,y),以此为起点填充一个h*w的矩形区域
-		uint32_t wh = inl(VGACTL_ADDR);
-		int width = wh>>16;
-		//int height = wh & 0x0000ffff;
-		//assert(x>=0 && y>=0 && x+w<=width && y+h<=height);
-		uint32_t *fb = (uint32_t *)FB_ADDR;
-		for(int i=0;i<h;++i){
-			for(int j=0;j<w;++j){
-				fb[width*(y+i)+(x+j)] = ((uint32_t *)ctl->pixels)[i*w+j];
+	int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;//起点(x,y),以此为起点填充一个h*w的矩形区域
+	uint32_t wh = inl(VGACTL_ADDR);
+  uint32_t width = wh >> 16;
+  uint32_t height = wh & 0x0000ffff;
+  //assert(x>=0 && y>=0 && x+w<=width && y+h<=height);
+  if (x<0 || y<0 || x + w>width || y + h>height) return;
+	if(!ctl->sync){//写入缓冲区
+		uint32_t * fb = (uint32_t*)FB_ADDR;
+    for (int i = 0; i < h; ++i) {
+			for (int j = 0; j < w; ++j) {
+				fb[width * (y + i) + (x + j)] = ((uint32_t*)ctl->pixels)[i * w + j];
 			}
 		}
+	}
+  if (ctl->sync) {//同步
     outl(SYNC_ADDR, 1);
   }
 }
