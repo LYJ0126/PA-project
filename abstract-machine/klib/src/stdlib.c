@@ -38,7 +38,7 @@ void *malloc(size_t size) {
 	size  = (size_t)ROUNDUP(size, 8);
   char *old = myhbrk;
   myhbrk += size;
-	printf("%u  %u  %u\n",heap.start,myhbrk,heap.end);
+	printf("%x  %x  %x\n",heap.start,myhbrk,heap.end);
   assert((uintptr_t)heap.start <= (uintptr_t)myhbrk && (uintptr_t)myhbrk < (uintptr_t)heap.end);
   for (uint64_t *p = (uint64_t *)old; p != (uint64_t *)myhbrk; p ++) {
     *p = 0;
