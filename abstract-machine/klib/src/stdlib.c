@@ -42,7 +42,6 @@ void *malloc(size_t size) {
   for (uint64_t *p = (uint64_t *)old; p != (uint64_t *)myhbrk; p ++) {
     *p = 0;
   }
-	printf("%x  %x  %x  %x\n",heap.start,old,heap.end,size);
   return old;	
 #endif
   return NULL;
