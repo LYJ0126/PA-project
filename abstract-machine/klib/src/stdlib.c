@@ -39,6 +39,7 @@ void *malloc(size_t size) {
   char *old = myhbrk;
   myhbrk += size;
   assert((uintptr_t)heap.start <= (uintptr_t)myhbrk && (uintptr_t)myhbrk < (uintptr_t)heap.end);
+	printf("heap.start:%u  heap.end:%u  old:%u   myhbrk:%u\n",heap.start,heap.end,old,myhbrk);
   for (uint64_t *p = (uint64_t *)old; p != (uint64_t *)myhbrk; p ++) {
     *p = 0;
   }

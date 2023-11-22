@@ -1,5 +1,6 @@
 #include <am.h>
 #include <nemu.h>
+#include <klib.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
@@ -19,16 +20,19 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
     .width = wh>>16, .height = wh & 0x0000ffff,
     .vmemsz = 0
   };
+	printf("in __am_gpu_config width:%d  height:%d\n",cfg->width,cfg->height);
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
 	int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;//起点(x,y),以此为起点填充一个h*w的矩形区域
+	printf("x:%d,y:%d,w:%d,h:%d\n",x,y,w,h);
 	if(w==0 || h==0) return;
 	uint32_t wh = inl(VGACTL_ADDR);
   uint32_t width = wh >> 16, height = wh&0x0000ffff;
   //uint32_t height = wh & 0x0000ffff;
   //assert(x>=0 && y>=0 && x+w<=width && y+h<=height);
-	//if (x<0 || y<0 || x + w>width || y + h>height) return;
+	printf("in __am_gpu_fbddraw width:%u  height:%u\n",width,height);
+	if (x<0 || y<0 || x + w>width || y + h>height) return;
 	if(!ctl->sync){//写入缓冲区
 		uint32_t * fb = (uint32_t*)(uintptr_t)FB_ADDR;
     for (int i = 0; i < h; ++i) {
