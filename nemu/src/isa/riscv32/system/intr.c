@@ -13,14 +13,15 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
-#include <isa.h>
+#include <isa.h>//isa.h已经包含了isa-def.h。isa.h中有extern CPU_state cpu;这个声明
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
-
-  return 0;
+  cpu.mcause = NO;//存放触发异常的原因到mcause寄存器中
+  cpu.mepc = epc;//存放触发异常的PC到mepc寄存器中
+  return cpu.mtvec;//返回异常入口地址
 }
 
 word_t isa_query_intr() {

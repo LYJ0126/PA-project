@@ -50,6 +50,16 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
   }
 }
 
+uint32_t* CSR(uint32_t addr){
+	switch(addr){
+		case 0x300: return &cpu.mstatus;
+		case 0x341: return &cpu.mepc;
+		case 0x342: return &cpu.mcause;
+		case 0x305: return &cpu.mtvec;
+		default: return 0;
+	}
+}
+
 static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
@@ -107,6 +117,12 @@ static int decode_exec(Decode *s) {
 	INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu   , R, R(rd) = src1 / src2);
 	INSTPAT("0000001 ????? ????? 110 ????? 01100 11", rem    , R, R(rd) = (int)src1 % (int)src2);
 	INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu   , R, R(rd) = src1 % src2);
+	INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc = isa_raise_intr(gpr(17), s->pc));
+	INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, uint32_t* csraddr = CSR(imm); if(rd!=0) {R(rd) = *csraddr;} *csraddr = src1);
+	INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, uint32_t* csraddr = CSR(imm); R(rd) = *csraddr; if(src1 != 0) *csraddr = *csraddr | src1);
+	INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, uint32_t* csraddr = CSR(imm); R(rd)=*csraddr; if(src1 != 0) *csraddr = *csraddr & (~src1));
+	INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.mepc);
+	
 
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0

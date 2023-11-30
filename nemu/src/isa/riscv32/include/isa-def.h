@@ -21,6 +21,10 @@
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];//宏预处理最后这里是32
   vaddr_t pc;
+  vaddr_t mepc;//存放触发异常的PC
+  word_t mstatus;//存放处理器的状态
+  word_t mcause;//存放触发异常的原因
+  vaddr_t mtvec;//存放异常入口地址
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);//宏预处理最后这里是riscv32_CPU_state
 
 // decode
