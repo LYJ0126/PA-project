@@ -20,7 +20,10 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    * Then return the address of the interrupt/exception vector.
    */
   cpu.mcause = NO;//存放触发异常的原因到mcause寄存器中
+  printf("mcause: %x\n", cpu.mcause);
   cpu.mepc = epc;//存放触发异常的PC到mepc寄存器中
+  printf("mepc: %x\n", cpu.mepc);
+  printf("mtvec: %x\n", cpu.mtvec);
   return cpu.mtvec;//返回异常入口地址
 }
 
