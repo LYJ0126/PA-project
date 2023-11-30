@@ -44,8 +44,8 @@ void yield() {
 #ifdef __riscv_e
   asm volatile("li a5, -1; ecall");
 #else
-  asm volatile("li a7, -1; ecall");//ecall触发一个系统调用,转到异常入口地址mtvec寄存器中保存的地址处执行
   printf("yield\n");
+  asm volatile("li a7, -1; ecall");//ecall触发一个系统调用,转到异常入口地址mtvec寄存器中保存的地址处执行
 #endif
 }
 
