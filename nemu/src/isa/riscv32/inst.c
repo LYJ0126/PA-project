@@ -121,7 +121,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, uint32_t* csraddr = CSR(imm); if(rd!=0) {R(rd) = *csraddr;} *csraddr = src1);
 	INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, uint32_t* csraddr = CSR(imm); R(rd) = *csraddr; if(src1 != 0) *csraddr = *csraddr | src1);
 	INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, uint32_t* csraddr = CSR(imm); R(rd)=*csraddr; if(src1 != 0) *csraddr = *csraddr & (~src1));
-	INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.mepc + 4);
+	INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.mepc);
 	
 
 
