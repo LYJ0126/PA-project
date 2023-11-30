@@ -5,13 +5,13 @@
 static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
-  for(int i = 0; i < 32; i++){
+  /*for(int i = 0; i < 32; i++){
       printf("%x ", c->gpr[i]);
   }
     printf("\n");
     printf("mcause: %x\n", c->mcause);
     printf("mstatus: %x\n", c->mstatus);
-    printf("mepc: %x\n", c->mepc);
+    printf("mepc: %x\n", c->mepc);*/
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
@@ -44,7 +44,6 @@ void yield() {
 #ifdef __riscv_e
   asm volatile("li a5, -1; ecall");
 #else
-  printf("yield\n");
   asm volatile("li a7, -1; ecall");//ecall触发一个系统调用,转到异常入口地址mtvec寄存器中保存的地址处执行
 #endif
 }
