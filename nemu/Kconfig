@@ -160,6 +160,11 @@ config DTRACE
 	depends on TRACE
 	bool "Enabel device tracer"
 	default z
+
+config ETRACE
+	depends on TRACE
+	bool "Enable exception tracer"
+	default 0
 	
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
