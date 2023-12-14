@@ -9,12 +9,12 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
-size_t get_ramdisk_size();
+//size_t get_ramdisk_size();
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
   //从文件中读取ELF头
   Elf_Ehdr elf;
-  printf("offset:0,len:%d,ramdisk_size:%x\n",sizeof(Elf_Ehdr),get_ramdisk_size());
+  //printf("offset:0,len:%d,ramdisk_size:%x\n",sizeof(Elf_Ehdr),get_ramdisk_size());
   ramdisk_read(&elf, 0, sizeof(Elf_Ehdr));
   assert(elf.e_ident[0] == 0x7f && elf.e_ident[1] == 'E' && elf.e_ident[2] == 'L' && elf.e_ident[3] == 'F');//0x7fELF
   // 读取program header，并加载到内存中
