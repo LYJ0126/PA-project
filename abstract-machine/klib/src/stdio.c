@@ -7,7 +7,7 @@
 
 uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int width, int precision, int fillzero)//整数转字符串(不限制是有符号还是无符号)
 {
-	char tempstr[128];//由于存在宽度的问题，后面可能调整
+	char tempstr[256];//由于存在宽度的问题，后面可能调整
 	int i = 0, rem, k = 0;
 	if (radix == 10  && sign==1 && (n >> 31)) {//十进制有符号数且为负数
 		n = ~n + 1;//取反加一求原码
