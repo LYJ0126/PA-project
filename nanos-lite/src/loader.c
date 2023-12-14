@@ -14,6 +14,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //从文件中读取ELF头
   Elf_Ehdr elf;
   ramdisk_read(&elf, 0, sizeof(Elf_Ehdr));
+  printf("offset:0,len:%d\n",sizeof(Elf_Ehdr));
   assert(elf.e_ident[0] == 0x7f && elf.e_ident[1] == 'E' && elf.e_ident[2] == 'L' && elf.e_ident[3] == 'F');//0x7fELF
   // 读取program header，并加载到内存中
   for (int i = 0; i < elf.e_phnum; i++) {
