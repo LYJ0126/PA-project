@@ -6,9 +6,9 @@ static Context* do_event(Event e, Context* c) {
     case EVENT_YIELD:printf("Event yield, event ID = %d\n", e.event); break;
     case EVENT_SYSCALL:
     printf("Event syscall, event ID = %d\n", e.event);
-    printf("a7:c->GPR1,a0:c->GPR2,a1:c->GPR3,a2:c->GPR4,a0:c->GPRx\n");
+    printf("a7:%d,a0:%d,a1:%d,a2:c%d,a0:%d\n",c->GPR1,c->GPR2,c->GPR3,c->GPR4,c->GPRx);
     do_syscall(c);
-    printf("a7:c->GPR1,a0:c->GPR2,a1:c->GPR3,a2:c->GPR4,a0:c->GPRx\n");
+    printf("a7:%d,a0:%d,a1:%d,a2:c%d,a0:%d\n",c->GPR1,c->GPR2,c->GPR3,c->GPR4,c->GPRx);
     break;
     default: panic("Unhandled event ID = %d", e.event);
   }
