@@ -71,13 +71,14 @@ int _write(int fd, void *buf, size_t count) {
   return 0;
 }
 
-extern char _end;
+extern char end;
 void *_sbrk(intptr_t increment) {
-  static char *program_break = &_end;
-  if(_syscall_(SYS_brk, increment, 0, 0) == 0) {
-    char *old_program_break = program_break;
-    program_break += increment;
-    return (void*)old_program_break;
+  char *old_end = &end;
+  int res = _syscall_(SYS_brk, increment, 0, 0);
+  if(res == 0){
+    void *ret = old_end;
+    old_end += increment;
+    return ret;
   }
   else return (void *)-1;
 }
