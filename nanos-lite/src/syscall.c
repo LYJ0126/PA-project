@@ -12,13 +12,17 @@ void do_syscall(Context *c) {
     case 1: printf("SYS_yield\n"); yield(); c->GPRx = 0; break;
     case 4:{ 
       printf("SYS_write, a0 = %d, a1 = %x, a2 = %d\n", a[1], a[2], a[3]);
+      int flag = 0;
       if(a[1] == 1 || a[1] == 2) {//stdout or stderr
         char *buf = (char *)a[2];
-        for(int i = 0; i < a[3]; i++) {//a[3]是写入的字节数
+        int i = 0;
+        for(; i < a[3]; i++) {//a[3]是写入的字节数
           putch(buf[i]);
         }
+        if(i == a[3]) flag = 1;
       }
-      c->GPRx = a[3];
+      if(flag) c->GPRx = a[3];
+      else c->GPRx = -1;
       break;
     }
     default: panic("Unhandled syscall ID = %d", a[0]);
