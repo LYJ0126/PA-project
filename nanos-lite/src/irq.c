@@ -6,7 +6,7 @@ static Context* do_event(Event e, Context* c) {
   switch (e.event) {
     case EVENT_YIELD:printf("Event yield, event ID = %d\n", e.event); break;
     case EVENT_SYSCALL:
-    printf("Event syscall, event ID = %d\n", e.event);
+    //printf("Event syscall, event ID = %d\n", e.event);
     //printf("a7:%d,a0:%d,a1:%d,a2:%d,a0:%d\n",c->GPR1,c->GPR2,c->GPR3,c->GPR4,c->GPRx);
     do_syscall(c);
     //printf("a7:%d,a0:%d,a1:%d,a2:%d,a0:%d\n",c->GPR1,c->GPR2,c->GPR3,c->GPR4,c->GPRx);
