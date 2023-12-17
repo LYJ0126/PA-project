@@ -41,15 +41,18 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   printf("fd:%d\n",fd);
   Elf_Ehdr elf;
   fs_read(fd, &elf, sizeof(Elf_Ehdr));
+  printf("elf.e_phnum:%d\n",elf.e_phnum);
   assert(elf.e_ident[0] == 0x7f && elf.e_ident[1] == 'E' && elf.e_ident[2] == 'L' && elf.e_ident[3] == 'F');//0x7fELF
   for (int i = 0; i < elf.e_phnum; i++) {
     Elf_Phdr phdr;
     fs_read(fd, &phdr, sizeof(Elf_Phdr));
     if (phdr.p_type == PT_LOAD) {
       fs_read(fd, (void *)phdr.p_vaddr, phdr.p_memsz);
+      printf("read phdr.p_vaddr:%x,phdr.p_offset:%x,phdr.p_memsz:%x\n",phdr.p_vaddr,phdr.p_offset,phdr.p_memsz);
       memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
     }
   }
+  printf("elf.e_entry:%x\n",elf.e_entry);
   return elf.e_entry;
 }
 
