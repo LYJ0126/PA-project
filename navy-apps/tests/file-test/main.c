@@ -31,7 +31,8 @@ int main() {
     assert(n == i + 1 + 1000);
   }
   //printf("pass4\n");
-  fclose(fp);
+  int temp = fclose(fp);
+  assert(temp == 0);
 
   printf("PASS!!!\n");
 
