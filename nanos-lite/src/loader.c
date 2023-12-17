@@ -34,7 +34,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //跳转到程序入口执行
   return elf.e_entry;
   */
+  printf("filename:%s\n",filename);
   int fd = fs_open(filename);
+  printf("fd:%d\n",fd);
   Elf_Ehdr elf;
   fs_read(fd, &elf, sizeof(Elf_Ehdr));
   assert(elf.e_ident[0] == 0x7f && elf.e_ident[1] == 'E' && elf.e_ident[2] == 'L' && elf.e_ident[3] == 'F');//0x7fELF
