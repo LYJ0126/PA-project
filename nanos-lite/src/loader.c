@@ -16,7 +16,7 @@ extern size_t fs_read(int fd, void *buf, size_t len);
 //size_t get_ramdisk_size();
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
-  
+  /*
   //从文件中读取ELF头
   Elf_Ehdr elf;
   //printf("offset:0,len:%d,ramdisk_size:%x\n",sizeof(Elf_Ehdr),get_ramdisk_size());
@@ -34,8 +34,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   }
   //跳转到程序入口执行
   return elf.e_entry;
+  */
   
-  /*
   printf("filename:%s\n",filename);
   int fd = fs_open(filename);
   printf("fd:%d\n",fd);
@@ -50,7 +50,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
     }
   }
-  return elf.e_entry;*/
+  return elf.e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
