@@ -89,10 +89,14 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   return file_table[fd].open_offset;
 }
 
+
 int fs_close(int fd) {
   return 0;
 }
 
+size_t get_disk_offset(int fd){
+  return file_table[fd].disk_offset;
+}
 void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
