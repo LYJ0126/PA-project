@@ -1,4 +1,6 @@
 #include <common.h>
+#include <sys/time.h>
+#include <time.h>
 #include "syscall.h"
 extern int fs_open(const char *pathname, int flags, int mode);
 extern size_t fs_read(int fd, void *buf, size_t len);
@@ -36,6 +38,15 @@ void do_syscall(Context *c) {
     case 7: printf("SYS_close, a0 = %d\n", a[1]); c->GPRx = fs_close(a[1]); break;
     case 8: printf("SYS_lseek, a0 = %d, a1 = %d, a2 = %d\n", a[1], a[2], a[3]); c->GPRx =fs_lseek(a[1], a[2], a[3]); break;
     case 9: c->GPRx = 0; break;
+    case 19: {
+      //printf("SYS_gettimeofday, a0 = %x, a1 = %x\n", a[1], a[2]);
+      struct timeval *tv = (struct timeval *)a[1];
+      //struct timezone *tz = (struct timezone *)a[2];
+      uint64_t us = io_read(AM_TIMER_UPTIME).us;
+      if(tv != NULL)
+        tv->tv_sec = us / 1000000, tv->tv_usec = us % 1000000;
+      break;
+    }
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
