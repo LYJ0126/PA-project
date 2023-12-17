@@ -20,8 +20,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //从文件中读取ELF头
   Elf_Ehdr elf;
   //printf("offset:0,len:%d,ramdisk_size:%x\n",sizeof(Elf_Ehdr),get_ramdisk_size());
-  //ramdisk_read(&elf, 0, sizeof(Elf_Ehdr));
-  fs_read(fs_open(filename), &elf, sizeof(Elf_Ehdr));
+  ramdisk_read(&elf, 0, sizeof(Elf_Ehdr));
+  //fs_read(fs_open(filename), &elf, sizeof(Elf_Ehdr));
+  printf("elf.e_phnum:%d\n",elf.e_phnum);
   assert(elf.e_ident[0] == 0x7f && elf.e_ident[1] == 'E' && elf.e_ident[2] == 'L' && elf.e_ident[3] == 'F');//0x7fELF
   // 读取program header，并加载到内存中
   for (int i = 0; i < elf.e_phnum; i++) {
@@ -29,12 +30,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     ramdisk_read(&phdr, elf.e_phoff + i * elf.e_phentsize, sizeof(Elf_Phdr));
     if (phdr.p_type == PT_LOAD) {
       ramdisk_read((void *)phdr.p_vaddr, phdr.p_offset, phdr.p_memsz);
+      printf("read phdr.p_vaddr:%x,phdr.p_offset:%x,phdr.p_memsz:%x\n",phdr.p_vaddr,phdr.p_offset,phdr.p_memsz);
       memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
     }
   }
   //跳转到程序入口执行
+  printf("elf.e_entry:%x\n",elf.e_entry);
   return elf.e_entry;
-  
   /*
   printf("filename:%s\n",filename);
   int fd = fs_open(filename);
