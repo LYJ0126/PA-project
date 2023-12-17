@@ -26,9 +26,9 @@ void init_proc() {
   Log("Initializing processes...");
 
   // load program here
-  printf("start naive_uload\n");
+  //printf("start naive_uload\n");
   naive_uload(NULL, "/bin/file-test");
-  printf("end naive_uload\n");
+  //printf("end naive_uload\n");
 }
 
 Context* schedule(Context *prev) {
