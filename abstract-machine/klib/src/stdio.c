@@ -52,7 +52,7 @@ uint32_t itoa(uint32_t n, char* str, uint32_t radix, int upper, int sign, int wi
 }
 
 int printf(const char* fmt, ...) {
-	char buffer[2048];//缓冲区
+	char buffer[4096];//缓冲区
 	va_list ap;
 	va_start(ap, fmt);
 	int ret = vsprintf(buffer, fmt, ap);
