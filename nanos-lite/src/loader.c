@@ -9,9 +9,14 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
+//extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+extern int fs_open(const char *pathname);
+extern size_t fs_read(int fd, void *buf, size_t len);
+//extern size_t fs_write(int fd, const void *buf, size_t len);
 //size_t get_ramdisk_size();
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
+  /*
   //从文件中读取ELF头
   Elf_Ehdr elf;
   //printf("offset:0,len:%d,ramdisk_size:%x\n",sizeof(Elf_Ehdr),get_ramdisk_size());
@@ -27,6 +32,20 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     }
   }
   //跳转到程序入口执行
+  return elf.e_entry;
+  */
+  int fd = fs_open(filename);
+  Elf_Ehdr elf;
+  fs_read(fd, &elf, sizeof(Elf_Ehdr));
+  assert(elf.e_ident[0] == 0x7f && elf.e_ident[1] == 'E' && elf.e_ident[2] == 'L' && elf.e_ident[3] == 'F');//0x7fELF
+  for (int i = 0; i < elf.e_phnum; i++) {
+    Elf_Phdr phdr;
+    fs_read(fd, &phdr, sizeof(Elf_Phdr));
+    if (phdr.p_type == PT_LOAD) {
+      fs_read(fd, (void *)phdr.p_vaddr, phdr.p_filesz);
+      memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0, phdr.p_memsz - phdr.p_filesz);
+    }
+  }
   return elf.e_entry;
 }
 
