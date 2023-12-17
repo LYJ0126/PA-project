@@ -27,7 +27,7 @@ void init_proc() {
 
   // load program here
   printf("start naive_uload\n");
-  naive_uload(NULL, "/bin/dummy");
+  naive_uload(NULL, "/bin/hello");
   printf("end naive_uload\n");
 }
 
