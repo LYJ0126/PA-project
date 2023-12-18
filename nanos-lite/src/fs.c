@@ -41,7 +41,7 @@ static Finfo file_table[] __attribute__((used)) = {
 
 int fs_open(const char *pathname, int flags, int mode) {
   //nanos中没有用到flags和mode
-  for(int i = 3; i < NR_FILES; i++){
+  for(int i = 0; i < NR_FILES; i++){
     if(strcmp(file_table[i].name, pathname) == 0){
       file_table[i].open_offset = 0;//打开文件时，将文件偏移量置为0
       printf("open file:%s\n",pathname);
