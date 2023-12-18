@@ -132,6 +132,7 @@ void init_fs() {
   int fd = fs_open("/dev/fb", 0, 0);
   int width = io_read(AM_GPU_CONFIG).width;
   int height = io_read(AM_GPU_CONFIG).height;
+  printf("width:%d,height:%d\n",width,height);
   file_table[fd].size = width * height * 4;
   //printf("file_table[fd].size:%d\n",file_table[fd].size);
   fs_close(fd);
