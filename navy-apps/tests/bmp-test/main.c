@@ -7,16 +7,16 @@
 int main() {
   NDL_Init(0);
   int w, h;
-  printf("Test begins!\n");
+  //printf("Test begins!\n");
   void *bmp = BMP_Load("/share/pictures/projectn.bmp", &w, &h);
   assert(bmp);
-  printf("w:%d h:%d\n",w,h);
+  //printf("w:%d h:%d\n",w,h);
   NDL_OpenCanvas(&w, &h);
-  printf("w:%d h:%d\n",w,h);
+  //printf("w:%d h:%d\n",w,h);
   NDL_DrawRect(bmp, 0, 0, w, h);
   free(bmp);
   NDL_Quit();
   printf("Test ends! Spinning...\n");
-  sleep(10000);
+  while(1);
   return 0;
 }
