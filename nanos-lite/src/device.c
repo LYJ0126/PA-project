@@ -45,9 +45,12 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   //return 0;
-  if(offset >= strlen((char *)buf)) return 0;
+  /*if(offset >= strlen((char *)buf)) return 0;
   if(offset + len > strlen((char *)buf)) len = strlen((char *)buf) - offset;
-  memcpy(buf, (char *)buf + offset, len);
+  memcpy(buf, (char *)buf + offset, len);*/
+  int width = io_read(AM_GPU_CONFIG).width;
+  int height = io_read(AM_GPU_CONFIG).height;
+  sprintf((char*)buf, "WIDTH:%d\nHEIGHT:%d\n", width, height);
   return len;
 }
 
