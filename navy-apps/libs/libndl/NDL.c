@@ -8,8 +8,8 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
+static struct timeval* tv;
 uint32_t NDL_GetTicks() {
-  struct timeval* tv;
   _gettimeofday(tv, NULL);
   return tv->tv_sec * 1000 + tv->tv_usec / 1000;
 }
@@ -59,6 +59,7 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  _gettimeofday(tv, NULL);
   return 0;
 }
 
