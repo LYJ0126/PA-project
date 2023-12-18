@@ -4,17 +4,17 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include "../libos/src/syscall.h"
 
-extern int _gettimeofday(struct timeval *tv, struct timezone *tz);
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
+//extern int mygettimeofday(struct timeval *tv, struct timezone *tz);
 static struct timeval* tv;
 uint32_t NDL_GetTicks() {
-  _gettimeofday(tv, NULL);
-  return tv->tv_sec * 1000 + tv->tv_usec / 1000;
+  struct timeval temptv;
+  gettimeofday(&temptv, NULL);
+  return (temptv.tv_sec - tv->tv_sec) * 1000 + (temptv.tv_usec - tv->tv_usec) / 1000;
 }
 
 int NDL_PollEvent(char *buf, int len) {
@@ -62,7 +62,9 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-  _gettimeofday(tv, NULL);
+  tv = (struct timeval *)malloc(sizeof(struct timeval));
+  //mygettimeofday(tv, NULL);
+  gettimeofday(tv, NULL);
   return 0;
 }
 

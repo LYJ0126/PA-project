@@ -1,4 +1,7 @@
 #include <common.h>
+#include <stdio.h>
+#include <sys/time.h>
+#include <time.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 # define MULTIPROGRAM_YIELD() yield()
@@ -33,6 +36,12 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
   return 0;
 }
 
+int mygettimeofday(struct timeval *tv, struct timezone *tz) {
+  uint64_t us = io_read(AM_TIMER_UPTIME).us;
+  if(tv != NULL) tv->tv_sec = us / 1000000, tv->tv_usec = us % 1000000;
+  if(tz != NULL){}
+  return 0;
+}
 void init_device() {
   Log("Initializing devices...");
   ioe_init();
