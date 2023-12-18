@@ -45,7 +45,11 @@ void do_syscall(Context *c) {
       break;
     }*/
     case 7: printf("SYS_close, a0 = %d\n", a[1]); c->GPRx = fs_close(a[1]); break;
-    case 8: printf("SYS_lseek, a0 = %d, a1 = %d, a2 = %d\n", a[1], a[2], a[3]); c->GPRx =fs_lseek(a[1], a[2], a[3]); break;
+    case 8: {
+      //printf("SYS_lseek, a0 = %d, a1 = %d, a2 = %d\n", a[1], a[2], a[3]); 
+      c->GPRx =fs_lseek(a[1], a[2], a[3]); 
+      break;
+    }
     case 9: c->GPRx = 0; break;
     case 19: {
       //printf("SYS_gettimeofday, a0 = %x, a1 = %x\n", a[1], a[2]);
