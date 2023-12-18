@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
+#include "../libos/src/syscall.h"
 
 extern int _gettimeofday(struct timeval *tv, struct timezone *tz);
 static int evtdev = -1;
