@@ -27,7 +27,7 @@ void init_proc() {
 
   // load program here
   //printf("start naive_uload\n");
-  naive_uload(NULL, "/bin/event-test");
+  naive_uload(NULL, "/bin/bmp-test");
   //printf("end naive_uload\n");
 }
 
