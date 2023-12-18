@@ -14,5 +14,6 @@ int main()
 		printf("s:%u,ms:%u\n",temptime/1000,temptime%1000);
 		ttime += 500;
 	}
+	NDL_Quit();
 	return 0;
 }
