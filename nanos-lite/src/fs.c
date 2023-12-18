@@ -16,7 +16,7 @@ typedef struct {
   int open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_EVENTS};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -33,6 +33,8 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write, 0},
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write, 0},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write, 0},
+  [FD_FB] = {"/dev/fb", 0, 0, invalid_read, invalid_write, 0},
+  [FD_EVENTS] = {"/dev/events", 0, 0, events_read, invalid_write, 0},
 #include "files.h"
 };
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
@@ -60,7 +62,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
   file_table[fd].open_offset += len;//更新文件偏移量
   printf("read %u bytes from file:%s\n",len, file_table[fd].name);
   return len;*/
-  if(fd == -1) return events_read(buf, 0, len);
+  //if(fd == -1) return events_read(buf, 0, len);
   Finfo *f = &file_table[fd];
   if (f->read == NULL) {//ramdisk_read进行读操作
     if(f->open_offset + len > f->size) {

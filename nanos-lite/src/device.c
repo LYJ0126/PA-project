@@ -43,7 +43,11 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  //return 0;
+  if(offset >= strlen((char *)buf)) return 0;
+  if(offset + len > strlen((char *)buf)) len = strlen((char *)buf) - offset;
+  memcpy(buf, (char *)buf + offset, len);
+  return len;
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
