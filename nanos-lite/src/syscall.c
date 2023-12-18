@@ -18,7 +18,11 @@ void do_syscall(Context *c) {
   switch (a[0]) {
     case 0: halt(0);break;
     case 1: printf("SYS_yield\n"); yield(); c->GPRx = 0; break;
-    case 2: printf("SYS_open, a0 = %s, a1 = %d\n", a[1], a[2]); c->GPRx = fs_open((char *)a[1], a[2], 0); break;
+    case 2: {
+      //printf("SYS_open, a0 = %s, a1 = %d\n", a[1], a[2]); 
+      c->GPRx = fs_open((char *)a[1], a[2], 0); 
+      break;
+    }
     case 3: {
     //printf("SYS_read, a0 = %d, a1 = %x, a2 = %d\n", a[1], a[2], a[3]); 
     c->GPRx = fs_read(a[1], (void *)a[2], a[3]); 
