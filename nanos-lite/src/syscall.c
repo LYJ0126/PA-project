@@ -43,8 +43,8 @@ void do_syscall(Context *c) {
       struct timeval *tv = (struct timeval *)a[1];
       //struct timezone *tz = (struct timezone *)a[2];
       uint64_t us = io_read(AM_TIMER_UPTIME).us;
-      if(tv != NULL)
-        tv->tv_sec = us / 1000000, tv->tv_usec = us % 1000000;
+      if(tv != NULL) tv->tv_sec = us / 1000000, tv->tv_usec = us % 1000000;
+      c->GPRx = 0;
       break;
     }
     default: panic("Unhandled syscall ID = %d", a[0]);
