@@ -13,6 +13,8 @@ int main()
 	printf("%llu\n", ttime);
 	while(1){
 		while((tv.tv_sec * 1000 + tv.tv_usec / 1000) < ttime) gettimeofday(&tv, NULL);
+		printf("timer interrupt\n");
+		printf("tv_sec:%ld, tv_usec:%ld\n", tv.tv_sec, tv.tv_usec);
 		ttime += 500;
 		printf("%llu\n", ttime);
 	}
