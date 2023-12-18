@@ -6,12 +6,12 @@
 
 int main()
 {
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
+	NDL_Init(0);
 	uint64_t ttime = 500;
 	while(1){
-		while((tv.tv_sec * 1000 + tv.tv_usec / 1000) < ttime) gettimeofday(&tv, NULL);
-		printf("tv_sec:%ld, tv_usec:%ld\n", tv.tv_sec, tv.tv_usec);
+		while(NDL_GetTicks() < ttime);
+		uint32_t temptime = NDL_GetTicks();
+		printf("s:%u,ms:%u\n",temptime/1000,temptime%1000);
 		ttime += 500;
 	}
 	return 0;
