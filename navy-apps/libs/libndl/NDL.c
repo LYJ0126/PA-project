@@ -5,16 +5,15 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-static int evtdev = 0;
+static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
 //extern int mygettimeofday(struct timeval *tv, struct timezone *tz);
-static struct timeval* tv;
 uint32_t NDL_GetTicks() {
   struct timeval temptv;
   gettimeofday(&temptv, NULL);
-  return (temptv.tv_sec - tv->tv_sec) * 1000 + (temptv.tv_usec - tv->tv_usec) / 1000;
+  return (temptv.tv_sec) * 1000 + (temptv.tv_usec) / 1000;
 }
 
 int NDL_PollEvent(char *buf, int len) {
