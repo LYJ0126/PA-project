@@ -48,12 +48,21 @@ void NDL_OpenCanvas(int *w, int *h) {
     *w = screen_w;
     *h = screen_h;
   }
+  if(*w > screen_w) *w = screen_w;
+  if(*h > screen_h) *h = screen_h;
   printf("screen_w = %d, screen_h = %d\n", screen_w, screen_h);
   //screen_w = *w; screen_h = *h;
   close(fd);
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  
+  int fd = open("/dev/fb", 0, 0);
+  for(int i=0;i<h;++i){
+    lseek(fd, (x + (y + i) * screen_w) * sizeof(uint32_t), SEEK_SET);
+    write(fd, pixels + i * w, w * sizeof(uint32_t));
+  }
+  close(fd);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {

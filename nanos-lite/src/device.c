@@ -17,6 +17,7 @@ static const char *keyname[256] __attribute__((used)) = {
   AM_KEYS(NAME)
 };
 
+//static AM_GPU_CONFIG_T gpu_config;
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   for(int i = 0; i < len; ++i){
     putch(((char *)buf)[i]);
@@ -51,7 +52,12 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  return 0;
+  //return 0;
+  int width = io_read(AM_GPU_CONFIG).width;
+  int x = (offset / 4) % width;
+  int y = (offset / 4) / width;
+  io_write(AM_GPU_FBDRAW, x,y,(void*)buf,len/4,1,true);
+  return len;
 }
 
 int mygettimeofday(struct timeval *tv, struct timezone *tz) {
