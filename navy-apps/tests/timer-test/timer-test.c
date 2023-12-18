@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <sys/time.h>
-#include <time.h>
-#include "../../libndl/include/NDL.h"
+//#include <sys/time.h>
+//#include <time.h>
+#include <NDL.h>
 
 int main()
 {

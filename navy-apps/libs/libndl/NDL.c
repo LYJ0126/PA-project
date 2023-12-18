@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 
+extern int _gettimeofday(struct timeval *tv, struct timezone *tz);
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
