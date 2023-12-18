@@ -7,22 +7,28 @@
 
 static int evtdev = -1;
 static int fbdev = -1;
+static int dispinfodev = -1;
 static int screen_w = 0, screen_h = 0;
 
 //extern int mygettimeofday(struct timeval *tv, struct timezone *tz);
 uint32_t NDL_GetTicks() {
   struct timeval temptv;
   gettimeofday(&temptv, NULL);
-  return (temptv.tv_sec) * 1000 + (temptv.tv_usec) / 1000;
+  return temptv.tv_sec  + temptv.tv_usec / 1000;
 }
 
 int NDL_PollEvent(char *buf, int len) {
   //return 0;
+  buf[0] = '\0';
   int fd = open("/dev/events", 0, 0);
   return read(fd, buf, len);
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
+  if(*w == 0 && *h == 0) {
+    *w = screen_w;
+    *h = screen_h;
+  }
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -40,7 +46,7 @@ void NDL_OpenCanvas(int *w, int *h) {
     }
     close(fbctl);
   }
-  int fd = open("/proc/dispinfo", 0, 0);
+  /*int fd = open("/proc/dispinfo", 0, 0);
   char buf[128];
   read(fd, buf, sizeof(buf));
   sscanf(buf, "WIDTH: %d\nHEIGHT: %d", &screen_w, &screen_h);
@@ -52,7 +58,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   if(*h > screen_h) *h = screen_h;
   printf("screen_w = %d, screen_h = %d\n", screen_w, screen_h);
   //screen_w = *w; screen_h = *h;
-  close(fd);
+  close(fd);*/
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
@@ -86,6 +92,11 @@ int NDL_Init(uint32_t flags) {
   //tv = (struct timeval *)malloc(sizeof(struct timeval));
   //mygettimeofday(tv, NULL);
   //gettimeofday(tv, NULL);
+  int fd = open("/proc/dispinfo", 0, 0);
+  char buf[128];
+  read(fd, buf, sizeof(buf));
+  sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &screen_w, &screen_h);
+  close(fd);
   return 0;
 }
 

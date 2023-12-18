@@ -119,6 +119,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
 
 
 int fs_close(int fd) {
+  file_table[fd].open_offset = 0;//关闭文件时，将文件偏移量置为0
   return 0;
 }
 
