@@ -11,10 +11,11 @@ static int dispinfodev = -1;
 static int screen_w = 0, screen_h = 0;
 
 //extern int mygettimeofday(struct timeval *tv, struct timezone *tz);
+struct timeval *tv;
 uint32_t NDL_GetTicks() {
   struct timeval temptv;
   gettimeofday(&temptv, NULL);
-  return temptv.tv_sec  + temptv.tv_usec / 1000;
+  return (temptv.tv_sec - tv->tv_sec) * 1000 + (temptv.tv_usec - tv->tv_usec) / 1000;
 }
 
 int NDL_PollEvent(char *buf, int len) {
@@ -89,9 +90,9 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-  //tv = (struct timeval *)malloc(sizeof(struct timeval));
+  tv = (struct timeval *)malloc(sizeof(struct timeval));
   //mygettimeofday(tv, NULL);
-  //gettimeofday(tv, NULL);
+  gettimeofday(tv, NULL);
   int fd = open("/proc/dispinfo", 0, 0);
   char buf[128];
   read(fd, buf, sizeof(buf));
@@ -101,4 +102,5 @@ int NDL_Init(uint32_t flags) {
 }
 
 void NDL_Quit() {
+  free(tv);
 }
