@@ -7,7 +7,7 @@
 int main()
 {
 	struct timeval tv;
-	//gettimeofday(&tv, NULL);
+	gettimeofday(&tv, NULL);
 	uint64_t ttime = 500;
 	printf("start\n");
 	printf("%llu\n", ttime);
