@@ -45,7 +45,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       buf[nread] = '\0';
       if (strcmp(buf, "mmap ok") == 0) break;
     }
-    close(fbctl);
+    //close(fbctl);
   }
   /*int fd = open("/proc/dispinfo", 0, 0);
   char buf[128];
@@ -97,9 +97,9 @@ int NDL_Init(uint32_t flags) {
   gettimeofday(tv, NULL);
   int fd = open("/proc/dispinfo", 0, 0);
   char buf[128];
-  printf("fd:%d\n",fd);
+  //printf("fd:%d\n",fd);
   read(fd, buf, sizeof(buf));
-  printf("buf:%s\n",buf);
+  //printf("buf:%s\n",buf);
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &screen_w, &screen_h);
   printf("screen_w = %d, screen_h = %d\n", screen_w, screen_h);
   /*
