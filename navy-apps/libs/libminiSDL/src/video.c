@@ -7,9 +7,59 @@
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  assert(dst->format->BytesPerPixel == 1 || dst->format->BytesPerPixel == 4);
+  int swidth = src->w;
+  int sheight = src->h;
+  int sw = (srcrect == NULL ? swidth : srcrect->w);
+  int sh = (srcrect == NULL ? sheight : srcrect->h);
+  int sstart = (srcrect == NULL ? 0 : srcrect->y * swidth + srcrect->x);//如果srcrect为NULL，就把sstart设为0
+  int dwidth = dst->w;
+  int dheight = dst->h;
+  int dw = (dstrect == NULL ? dwidth : dstrect->w);
+  int dh = (dstrect == NULL ? dheight : dstrect->h);
+  int dstart = (dstrect == NULL ? 0 : dstrect->y * dwidth + dstrect->x);//如果dstrect为NULL，就把dstart设为0
+  for(int i = 0; i < dh; ++ i) {
+    for(int j = 0; j < dw; ++ j) {
+      int sindex = i * swidth + j;
+      int dindex = i * dwidth + j;
+      if(src->format->BytesPerPixel == 1) {
+        dst->format->palette->colors[dstart + dindex].val = src->format->palette->colors[sstart + sindex].val;
+        dst->pixels[dstart + dindex] = src->pixels[sstart + sindex];
+      }
+      else {
+        dst->pixels[dstart + 4 * dindex] = src->pixels[sstart + 4 * sindex];
+        dst->pixels[dstart + 4 * dindex + 1] = src->pixels[sstart + 4 * sindex + 1];
+        dst->pixels[dstart + 4 * dindex + 2] = src->pixels[sstart + 4 * sindex + 2];
+        dst->pixels[dstart + 4 * dindex + 3] = src->pixels[sstart + 4 * sindex + 3];
+      }
+    }
+  }
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+  assert(dst);
+  assert(dst->format->BytesPerPixel == 1 || dst->format->BytesPerPixel == 4);
+  int width = dst->w;
+  int height = dst->h;
+  //dstrect为NULL时，把整个dst填充为color
+  int w = (dstrect == NULL ? width : dstrect->w);//如果dstrect为NULL，就把w设为width
+  int h = (dstrect == NULL ? height : dstrect->h);//如果dstrect为NULL，就把h设为height
+  int start = (dstrect == NULL ? 0 : dstrect->y * width + dstrect->x);//如果dstrect为NULL，就把start设为0
+  for(int i = 0; i < h; ++ i) {
+    for(int j = 0; j < w; ++ j) {
+      int index = i * width + j;
+      if(dst->format->BytesPerPixel == 1) {
+        dst->format->palette->colors[start + index].val = color;
+        //(uint32_t*)dst->pixels[start + index] = color;
+      }
+      else {
+        dst->pixels[start + 4 * index] = color & 0xff;
+        dst->pixels[start + 4 * index + 1] = (color >> 8) & 0xff;
+        dst->pixels[start + 4 * index + 2] = (color >> 16) & 0xff;
+        dst->pixels[start + 4 * index + 3] = (color >> 24) & 0xff;
+      }
+    }
+  }
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
@@ -17,6 +67,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     w = s->w;
     h = s->h;
   }
+  assert(s);
   //assert(s->format->BitsPerPixel == 8 || s->format->BitsPerPixel == 32);
   assert(s->format->BytesPerPixel == 1 || s->format->BytesPerPixel == 4);
   uint32_t *pixels = malloc(w * h * sizeof(uint32_t));
