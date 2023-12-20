@@ -2,6 +2,7 @@
 #include <SDL_bmp.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #define W 400
 #define H 300
@@ -12,7 +13,7 @@
 //   gg - first page
 
 // number of slides
-const int N = 1;
+const int N = 2;
 // slides path pattern (starts from 0)
 const char *path = "/share/slides/slides-%d.bmp";
 
