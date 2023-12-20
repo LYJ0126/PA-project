@@ -37,7 +37,7 @@ int SDL_WaitEvent(SDL_Event *event) {
     printf("strlen(buf + 3):%d\n",strlen(buf + 3));
     printf("strcmp(keyname[i], buf + 3):%d\n",strcmp(keyname[i], buf + 3));*/
     if(strlen(keyname[i]) == strlen(buf + 3) - 1){//注意buf+3的长度比keyname[i]的长度多1
-      if(strcmp(keyname[i], buf + 3) == 0){
+      if(strncmp(keyname[i], buf + 3, strlen(keyname[i])) == 0){
         event->key.keysym.sym = i;
         //printf("event->key.keysym.sym:%d\n",event->key.keysym.sym);
         break;
