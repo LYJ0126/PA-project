@@ -21,14 +21,15 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   assert(s->format->BytesPerPixel == 1 || s->format->BytesPerPixel == 4);
   uint32_t *pixels = malloc(w * h * sizeof(uint32_t));
   int pos = 0;
+  int start = y * s->w + x;
   for(int i = 0; i < h; ++ i) {
     for(int j = 0; j < w; ++ j) {
-      uint8_t *p = (uint8_t *)s->pixels + (i + y) * s->pitch + (j + x) * s->format->BytesPerPixel;
+      int index = i * s->w + j;
       if(s->format->BytesPerPixel == 1) {
-        pixels[pos ++] = s->format->palette->colors[*p].val;
+        pixels[pos ++] = s->format->palette->colors[s->pixels[start + index]].val;
       }
       else {
-        pixels[pos ++] = s->pixels[*p+3]<<24 | s->pixels[*p+2]<<16 | s->pixels[*p+1]<<8 | s->pixels[*p];
+        pixels[pos ++] = s->pixels[start + 4 * index + 3] << 24 | s->pixels[start + 4 * index + 2] << 16 | s->pixels[start + 4 * index + 1] << 8 | s->pixels[start + 4 * index + 0];
       }
     }
   }
