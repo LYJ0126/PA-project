@@ -74,7 +74,7 @@ BDF_Font::BDF_Font(const char *fname) {
     }
   }
 
-  fclose(fp);
+  //fclose(fp);
 }
 
 BDF_Font::~BDF_Font() {
