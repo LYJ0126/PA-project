@@ -29,6 +29,7 @@ SDL_Surface* IMG_Load(const char *filename) {
   printf("加载完成\n");
   fclose(fp);
   free(buf);
+  printf("释放buf\n");
   return ret;
 }
 
