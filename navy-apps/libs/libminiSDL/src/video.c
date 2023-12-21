@@ -21,19 +21,11 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   int dstart = (dstrect == NULL ? 0 : dstrect->y * dwidth + dstrect->x);//如果dstrect为NULL，就把dstart设为0
   //printf("swidth = %d, sheight = %d, sw = %d, sh = %d, sstart = %d, dwidth = %d, dheight = %d, dw = %d, dh = %d, dstart = %d\n", swidth, sheight, sw, sh, sstart, dwidth, dheight, dw, dh, dstart);
   for(int i = 0; i < sh; ++ i) {
-    for(int j = 0; j < sw; ++ j) {
-      int sindex = i * swidth + j;
-      int dindex = i * dwidth + j;
-      if(src->format->BytesPerPixel == 1) {
-        dst->format->palette->colors[dst->pixels[dstart+dindex]].val = src->format->palette->colors[src->pixels[sstart+sindex]].val;
-        dst->pixels[dstart + dindex] = src->pixels[sstart + sindex];
-      }
-      else {
-        dst->pixels[dstart + 4 * dindex] = src->pixels[sstart + 4 * sindex];
-        dst->pixels[dstart + 4 * dindex + 1] = src->pixels[sstart + 4 * sindex + 1];
-        dst->pixels[dstart + 4 * dindex + 2] = src->pixels[sstart + 4 * sindex + 2];
-        dst->pixels[dstart + 4 * dindex + 3] = src->pixels[sstart + 4 * sindex + 3];
-      }
+    if(dst->format->BytesPerPixel == 1) {
+      memcpy(dst->pixels + dstart + i * dwidth, src->pixels + sstart + i * swidth, sw);
+    }
+    else {
+      memcpy(dst->pixels + 4 * (dstart + i * dwidth), src->pixels + 4 * (sstart + i * swidth), 4 * sw);
     }
   }
 }
@@ -47,7 +39,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   int w = (dstrect == NULL ? width : (int)dstrect->w);//如果dstrect为NULL，就把w设为width
   int h = (dstrect == NULL ? height : (int)dstrect->h);//如果dstrect为NULL，就把h设为height
   int start = (dstrect == NULL ? 0 : dstrect->y * width + dstrect->x);//如果dstrect为NULL，就把start设为0
-  for(int i = 0; i < h; ++ i) {
+  /*for(int i = 0; i < h; ++ i) {
     for(int j = 0; j < w; ++ j) {
       int index = i * width + j;
       if(dst->format->BytesPerPixel == 1) {
@@ -59,6 +51,19 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
         dst->pixels[start + 4 * index + 1] = (color >> 8) & 0xff;
         dst->pixels[start + 4 * index + 2] = (color >> 16) & 0xff;
         dst->pixels[start + 4 * index + 3] = (color >> 24) & 0xff;
+      }
+    }
+  }*/
+  for(int i=0;i<h;++i){
+    if(dst->format->BytesPerPixel == 1) {
+      memset(dst->pixels + start + i * width, color, w);
+    }
+    else {
+      for(int j=0;j<w;++j){
+        dst->pixels[4 * (start + i * width + j)] = color & 0xff;
+        dst->pixels[4 * (start + i * width + j) + 1] = (color >> 8) & 0xff;
+        dst->pixels[4 * (start + i * width + j) + 2] = (color >> 16) & 0xff;
+        dst->pixels[4 * (start + i * width + j) + 3] = (color >> 24) & 0xff;
       }
     }
   }
