@@ -19,13 +19,13 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   int dw = (dstrect == NULL ? dwidth : dstrect->w);
   int dh = (dstrect == NULL ? dheight : dstrect->h);
   int dstart = (dstrect == NULL ? 0 : dstrect->y * dwidth + dstrect->x);//如果dstrect为NULL，就把dstart设为0
-  printf("swidth = %d, sheight = %d, sw = %d, sh = %d, sstart = %d, dwidth = %d, dheight = %d, dw = %d, dh = %d, dstart = %d\n", swidth, sheight, sw, sh, sstart, dwidth, dheight, dw, dh, dstart);
+  //printf("swidth = %d, sheight = %d, sw = %d, sh = %d, sstart = %d, dwidth = %d, dheight = %d, dw = %d, dh = %d, dstart = %d\n", swidth, sheight, sw, sh, sstart, dwidth, dheight, dw, dh, dstart);
   for(int i = 0; i < sh; ++ i) {
     for(int j = 0; j < sw; ++ j) {
       int sindex = i * swidth + j;
       int dindex = i * dwidth + j;
       if(src->format->BytesPerPixel == 1) {
-        dst->format->palette->colors[dstart + dindex].val = src->format->palette->colors[sstart + sindex].val;
+        dst->format->palette->colors[dst->pixels[dstart+dindex]].val = src->format->palette->colors[src->pixels[sstart+sindex]].val;
         dst->pixels[dstart + dindex] = src->pixels[sstart + sindex];
       }
       else {
@@ -44,15 +44,15 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   int width = dst->w;
   int height = dst->h;
   //dstrect为NULL时，把整个dst填充为color
-  int w = (dstrect == NULL ? width : dstrect->w);//如果dstrect为NULL，就把w设为width
-  int h = (dstrect == NULL ? height : dstrect->h);//如果dstrect为NULL，就把h设为height
+  int w = (dstrect == NULL ? width : (int)dstrect->w);//如果dstrect为NULL，就把w设为width
+  int h = (dstrect == NULL ? height : (int)dstrect->h);//如果dstrect为NULL，就把h设为height
   int start = (dstrect == NULL ? 0 : dstrect->y * width + dstrect->x);//如果dstrect为NULL，就把start设为0
   for(int i = 0; i < h; ++ i) {
     for(int j = 0; j < w; ++ j) {
       int index = i * width + j;
       if(dst->format->BytesPerPixel == 1) {
-        dst->format->palette->colors[start + index].val = color;
-        //(uint32_t*)dst->pixels[start + index] = color;
+        dst->format->palette->colors[dst->pixels[start + index]].val = color;
+        dst->pixels[start + index] = color;
       }
       else {
         dst->pixels[start + 4 * index] = color & 0xff;
