@@ -867,14 +867,15 @@ static void stbi__vertical_flip_slices(void *image, int w, int h, int z, int byt
 static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x, int *y, int *comp, int req_comp)
 {
    stbi__result_info ri;
+   printf("stbi__load_main\n");
    void *result = stbi__load_main(s, x, y, comp, req_comp, &ri, 8);
-
+   printf("stbi__load_main done\n");
    if (result == NULL)
       return NULL;
 
    // it is the responsibility of the loaders to make sure we get either 8 or 16 bit.
    STBI_ASSERT(ri.bits_per_channel == 8 || ri.bits_per_channel == 16);
-
+   printf("ri.bits_per_channel: %d\n", ri.bits_per_channel);
    if (ri.bits_per_channel != 8) {
       result = stbi__convert_16_to_8((stbi__uint16 *) result, *x, *y, req_comp == 0 ? *comp : req_comp);
       ri.bits_per_channel = 8;
@@ -932,6 +933,7 @@ STBIDEF stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, i
    stbi__context s;
    stbi__start_mem(&s,buffer,len);
    printf("stbi__load_and_postprocess_8bit\n");
+   printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
    return stbi__load_and_postprocess_8bit(&s,x,y,comp,req_comp);
 }
 
