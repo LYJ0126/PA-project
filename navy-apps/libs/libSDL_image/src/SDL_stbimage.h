@@ -215,7 +215,7 @@ SDL_STBIMG_DEF SDL_Surface* STBIMG_LoadFromMemory(const unsigned char* buffer, i
 	bppToUse = STBI_rgb_alpha;
 	printf("origin_has_alpha:%d\n",origin_has_alpha);
 	img.data = stbi_load_from_memory(buffer, length, &img.w, &img.h, &img.format, bppToUse);
-	printf("stbi_load_from_memory\n");
+	printf("stbi_load_from_memory done\n");
 	if(img.data == NULL)
 	{
 		SDL_SetError("STBIMG_LoadFromMemory(): Couldn't load image: %s!\n", stbi_failure_reason());

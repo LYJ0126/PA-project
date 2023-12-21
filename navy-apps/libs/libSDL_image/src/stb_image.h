@@ -875,6 +875,7 @@ static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x, 
    printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
    void *result = stbi__load_main(s, x, y, comp, req_comp, &ri, 8);
    printf("stbi__load_main done\n");
+   printf("result is NULL or not: %d\n", result == NULL);
    if (result == NULL)
       return NULL;
 
