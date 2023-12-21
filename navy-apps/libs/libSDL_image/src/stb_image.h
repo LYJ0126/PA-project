@@ -770,20 +770,22 @@ static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int re
    ri->num_channels = 0;
 
    #ifndef STBI_NO_JPEG
-   if (stbi__jpeg_test(s)) return stbi__jpeg_load(s,x,y,comp,req_comp, ri);
+   if (stbi__jpeg_test(s)) printf("to stbi_jpeg_load\n"); return stbi__jpeg_load(s,x,y,comp,req_comp, ri);
    #endif
    #ifndef STBI_NO_PNG
-   if (stbi__png_test(s))  return stbi__png_load(s,x,y,comp,req_comp, ri);
+   if (stbi__png_test(s))  printf("to stbi_png_load\n"); return stbi__png_load(s,x,y,comp,req_comp, ri);
    #endif
    #ifndef STBI_NO_BMP
-   if (stbi__bmp_test(s))  return stbi__bmp_load(s,x,y,comp,req_comp, ri);
+   if (stbi__bmp_test(s))  printf("to stbi_bmp_load\n"); return stbi__bmp_load(s,x,y,comp,req_comp, ri);
    #endif
    #ifndef STBI_NO_GIF
-   if (stbi__gif_test(s))  return stbi__gif_load(s,x,y,comp,req_comp, ri);
+   if (stbi__gif_test(s))  printf("to stbi_gif_load\n"); return stbi__gif_load(s,x,y,comp,req_comp, ri);
    #endif
+   printf("to stbi__errpuc\n");
    STBI_NOTUSED(bpc);
+   printf("stbi__errpuc\n");
    #ifndef STBI_NO_PNM
-   if (stbi__pnm_test(s))  return stbi__pnm_load(s,x,y,comp,req_comp, ri);
+   if (stbi__pnm_test(s))  printf("to stbi_pnm_load\n"); return stbi__pnm_load(s,x,y,comp,req_comp, ri);
    #endif
 
 
