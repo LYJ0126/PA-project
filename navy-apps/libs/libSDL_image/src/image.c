@@ -14,10 +14,10 @@ SDL_Surface* IMG_Load_RW(SDL_RWops *src, int freesrc) {
 SDL_Surface* IMG_Load(const char *filename) {
   FILE *fp = fopen(filename, "r");
   assert(fp != NULL);
-  fseek(fp, 0L, SEEK_END);
+  fseek(fp, 0, SEEK_END);
   long size = ftell(fp);//获取文件大小
-  fseek(fp, 0L, SEEK_SET);
-  char *buf = malloc(size);
+  fseek(fp, 0, SEEK_SET);
+  char *buf = (char*)malloc(size);
   fread(buf, 1, (size_t)size, fp);//将整个文件读入buf
   SDL_Surface *ret = STBIMG_LoadFromMemory(buf, size);//从内存中加载图片
   fclose(fp);
