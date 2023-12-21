@@ -15,7 +15,21 @@ int SDL_PushEvent(SDL_Event *ev) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {
-  return 0;
+  char buf[20];
+  memset(buf, 0, sizeof(buf));
+  if(NDL_PollEvent(buf, 20) == 0) return 0;//没有事件发生,立即返回
+  if(buf[0]=='k' && buf[1]=='d') ev->type = SDL_KEYDOWN;
+  else if(buf[0]=='k' && buf[1]=='u') ev->type = SDL_KEYUP;
+  int len = sizeof(keyname) / sizeof(keyname[0]);
+  for(int i = 0; i < len; i++){
+    if(strlen(keyname[i]) == strlen(buf + 3) - 1){//注意buf+3的长度比keyname[i]的长度多1
+      if(strncmp(keyname[i], buf + 3, strlen(keyname[i])) == 0){
+        ev->key.keysym.sym = i;
+        break;
+      }
+    }
+  }
+  return 1;
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
