@@ -20,8 +20,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   int dh = (dstrect == NULL ? dheight : dstrect->h);
   int dstart = (dstrect == NULL ? 0 : dstrect->y * dwidth + dstrect->x);//如果dstrect为NULL，就把dstart设为0
   printf("swidth = %d, sheight = %d, sw = %d, sh = %d, sstart = %d, dwidth = %d, dheight = %d, dw = %d, dh = %d, dstart = %d\n", swidth, sheight, sw, sh, sstart, dwidth, dheight, dw, dh, dstart);
-  for(int i = 0; i < dh; ++ i) {
-    for(int j = 0; j < dw; ++ j) {
+  for(int i = 0; i < sh; ++ i) {
+    for(int j = 0; j < sw; ++ j) {
       int sindex = i * swidth + j;
       int dindex = i * dwidth + j;
       if(src->format->BytesPerPixel == 1) {
