@@ -762,6 +762,8 @@ STBIDEF void stbi_set_flip_vertically_on_load(int flag_true_if_should_flip)
 
 static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri, int bpc)
 {
+   printf("stbi__load_main\n");
+   printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
    memset(ri, 0, sizeof(*ri)); // make sure it's initialized if we add new fields
    ri->bits_per_channel = 8; // default is 8 so most paths don't have to be changed
    ri->channel_order = STBI_ORDER_RGB; // all current input & output are this, but this is here so we can add BGR order
@@ -868,6 +870,7 @@ static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x, 
 {
    stbi__result_info ri;
    printf("stbi__load_main\n");
+   printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
    void *result = stbi__load_main(s, x, y, comp, req_comp, &ri, 8);
    printf("stbi__load_main done\n");
    if (result == NULL)
