@@ -928,8 +928,10 @@ STBIDEF stbi_us *stbi_load_16_from_memory(stbi_uc const *buffer, int len, int *x
 
 STBIDEF stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int *y, int *comp, int req_comp)
 {
+   printf("stbi_load_from_memory\n");
    stbi__context s;
    stbi__start_mem(&s,buffer,len);
+   printf("stbi__load_and_postprocess_8bit\n");
    return stbi__load_and_postprocess_8bit(&s,x,y,comp,req_comp);
 }
 
