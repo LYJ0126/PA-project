@@ -45,7 +45,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       buf[nread] = '\0';
       if (strcmp(buf, "mmap ok") == 0) break;
     }
-    //close(fbctl);
+    close(fbctl);
   }
   /*int fd = open("/proc/dispinfo", 0, 0);
   char buf[128];
