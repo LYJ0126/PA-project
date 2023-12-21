@@ -25,7 +25,7 @@ SDL_Surface* IMG_Load(const char *filename) {
   size_t tempsize = fread(buf, 1, (size_t)size, fp);//将整个文件读入buf
   printf("tempsize:%d\n",tempsize);
   assert(tempsize == size);
-  SDL_Surface *ret = STBIMG_LoadFromMemory(buf, size);//从内存中加载图片
+  SDL_Surface *ret = STBIMG_LoadFromMemory(buf, (int)size);//从内存中加载图片
   printf("加载完成\n");
   fclose(fp);
   free(buf);
