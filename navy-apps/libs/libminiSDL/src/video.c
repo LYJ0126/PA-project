@@ -16,8 +16,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   int sstart = (srcrect == NULL ? 0 : srcrect->y * swidth + srcrect->x);//如果srcrect为NULL，就把sstart设为0
   int dwidth = dst->w;
   int dheight = dst->h;
-  int dw = (dstrect == NULL ? dwidth : dstrect->w);
-  int dh = (dstrect == NULL ? dheight : dstrect->h);
+  //int dw = (dstrect == NULL ? dwidth : dstrect->w);
+  //int dh = (dstrect == NULL ? dheight : dstrect->h);
   int dstart = (dstrect == NULL ? 0 : dstrect->y * dwidth + dstrect->x);//如果dstrect为NULL，就把dstart设为0
   //printf("swidth = %d, sheight = %d, sw = %d, sh = %d, sstart = %d, dwidth = %d, dheight = %d, dw = %d, dh = %d, dstart = %d\n", swidth, sheight, sw, sh, sstart, dwidth, dheight, dw, dh, dstart);
   for(int i = 0; i < sh; ++ i) {
@@ -25,7 +25,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
       memcpy(dst->pixels + dstart + i * dwidth, src->pixels + sstart + i * swidth, sw);
     }
     else {
-      memcpy(dst->pixels + 4 * (dstart + i * dwidth), src->pixels + 4 * (sstart + i * swidth), 4 * sw);
+      memcpy((uint32_t*)dst->pixels + dstart + i * dwidth, (uint32_t*)src->pixels + sstart + i * swidth, 4 * sw);
     }
   }
 }
