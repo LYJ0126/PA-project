@@ -28,15 +28,23 @@ static void sh_handle_cmd(const char *cmd) {
   char *args = strtok((char *)cmd, "\n");
   printf("args: %s\n", args);
   printf("args length: %d\n", strlen(args));
+  printf("strcmp(args, \"help\"): %d\n", strcmp(args, "help"));
+  printf("strcmp(args, \"hello world\"): %d\n", strcmp(args, "hello world"));
+  printf("strcmp(args, \"exit\"): %d\n", strcmp(args, "exit"));
   if (strcmp(args, "help") == 0) {
     sh_printf("Built-in commands:\n");
     sh_printf("  help: show this message\n");
     sh_printf("  hello world: say hello to the world\n");
     sh_printf("  exit: exit the shell\n");
-  } else if (strcmp(cmd, "hello world") == 0) {
+    return;
+  } 
+  else if (strcmp(cmd, "hello world") == 0) {
     sh_printf("Hello, world!\n");
-  } else if (strcmp(cmd, "exit") == 0) {
+    return;
+  } 
+  else if (strcmp(cmd, "exit") == 0) {
     exit(0);
+    return;
   }
   //文件处理
   if(args == NULL) return;
