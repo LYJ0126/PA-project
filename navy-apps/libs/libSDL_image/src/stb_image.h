@@ -935,11 +935,13 @@ STBIDEF stbi_us *stbi_load_16_from_memory(stbi_uc const *buffer, int len, int *x
 
 STBIDEF stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int *y, int *comp, int req_comp)
 {
+   printf("buffer: %p, len: %d, x: %d, y: %d, comp: %d, req_comp: %d\n", buffer, len, *x, *y, *comp, req_comp);
    printf("stbi_load_from_memory\n");
    stbi__context s;
    stbi__start_mem(&s,buffer,len);
    printf("stbi__load_and_postprocess_8bit\n");
    printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
+   printf("s->img_buffer: %p, s->img_buffer_end: %p,s->img_buffer_original: %p, s->img_buffer_original_end: %p,s->img_x: %d, s->img_y: %d, s->img_n: %d, s->img_out_n: %d, s->buflen: %d\n", s.img_buffer, s.img_buffer_end, s.img_buffer_original, s.img_buffer_original_end, s.img_x, s.img_y, s.img_n, s.img_out_n, s.buflen);
    return stbi__load_and_postprocess_8bit(&s,x,y,comp,req_comp);
 }
 
