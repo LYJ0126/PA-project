@@ -34,13 +34,18 @@ SDL_Surface* IMG_Load(const char *filename) {
   int fd = open(filename, 0, 0);
   assert(fd != -1);
   lseek(fd, 0, SEEK_END);
+  printf("到文件末尾\n");
   long size = lseek(fd, 0, SEEK_CUR);
+  printf("size:%ld\n",size);
   lseek(fd, 0, SEEK_SET);
+  printf("回到文件开头\n");
   char *buf = (char*)malloc(size);
   read(fd, buf, size);
   SDL_Surface *ret = STBIMG_LoadFromMemory(buf, (int)size);
+  printf("加载完成\n");
   close(fd);
   free(buf);
+  printf("释放buf\n");
   return ret;
 }
 
