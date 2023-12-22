@@ -762,43 +762,39 @@ STBIDEF void stbi_set_flip_vertically_on_load(int flag_true_if_should_flip)
 
 static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri, int bpc)
 {
-   printf("stbi__load_main\n");
-   printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
-   printf("ri: %p\n", ri);
-   printf("ri->bits_per_channel: %d, ri->channel_order: %d, ri->num_channels: %d\n", ri->bits_per_channel, ri->channel_order, ri->num_channels);
+   //printf("stbi__load_main\n");
+   //printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
+   //printf("ri: %p\n", ri);
+   //printf("ri->bits_per_channel: %d, ri->channel_order: %d, ri->num_channels: %d\n", ri->bits_per_channel, ri->channel_order, ri->num_channels);
    memset(ri, 0, sizeof(*ri)); // make sure it's initialized if we add new fields
    ri->bits_per_channel = 8; // default is 8 so most paths don't have to be changed
    ri->channel_order = STBI_ORDER_RGB; // all current input & output are this, but this is here so we can add BGR order
    ri->num_channels = 0;
 
    #ifndef STBI_NO_JPEG
-   if (stbi__jpeg_test(s)) {printf("to stbi_jpeg_load\n"); return stbi__jpeg_load(s,x,y,comp,req_comp, ri);}
+   if (stbi__jpeg_test(s)) return stbi__jpeg_load(s,x,y,comp,req_comp, ri);
    #endif
    #ifndef STBI_NO_PNG
-   if (stbi__png_test(s))  {
-      printf("to stbi_png_load\n"); 
-      return stbi__png_load(s,x,y,comp,req_comp, ri);
-   }
+   if (stbi__png_test(s)) return stbi__png_load(s,x,y,comp,req_comp, ri);
    #endif
    #ifndef STBI_NO_BMP
-   if (stbi__bmp_test(s))  {printf("to stbi_bmp_load\n"); return stbi__bmp_load(s,x,y,comp,req_comp, ri);}
+   if (stbi__bmp_test(s)) return stbi__bmp_load(s,x,y,comp,req_comp, ri);
    #endif
    #ifndef STBI_NO_GIF
-   if (stbi__gif_test(s))  {printf("to stbi_gif_load\n"); return stbi__gif_load(s,x,y,comp,req_comp, ri);}
+   if (stbi__gif_test(s)) return stbi__gif_load(s,x,y,comp,req_comp, ri);
    #endif
-   printf("to stbi__errpuc\n");
+   //printf("to stbi__errpuc\n");
    STBI_NOTUSED(bpc);
-   printf("stbi__errpuc\n");
+   //printf("stbi__errpuc\n");
    #ifndef STBI_NO_PNM
-   if (stbi__pnm_test(s))  {printf("to stbi_pnm_load\n"); return stbi__pnm_load(s,x,y,comp,req_comp, ri);}
+   if (stbi__pnm_test(s)) return stbi__pnm_load(s,x,y,comp,req_comp, ri);
    #endif
 
 
    #ifndef STBI_NO_TGA
    // test tga last because it's a crappy test!
-   if (stbi__tga_test(s)){
-      printf("to stbi_tga_load"); return stbi__tga_load(s,x,y,comp,req_comp, ri);
-   }
+   if (stbi__tga_test(s))
+      return stbi__tga_load(s,x,y,comp,req_comp, ri);
    #endif
 
    return stbi__errpuc("unknown image type", "Image not of any known type, or corrupt");
@@ -877,17 +873,17 @@ static void stbi__vertical_flip_slices(void *image, int w, int h, int z, int byt
 static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x, int *y, int *comp, int req_comp)
 {
    stbi__result_info ri;
-   printf("stbi__load_main in stbi__load_and_postprocess_8bit\n");
-   printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
+   //printf("stbi__load_main in stbi__load_and_postprocess_8bit\n");
+   //printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
    void *result = stbi__load_main(s, x, y, comp, req_comp, &ri, 8);
-   printf("stbi__load_main done\n");
-   printf("result is NULL or not: %d\n", result == NULL);
+   //printf("stbi__load_main done\n");
+   //printf("result is NULL or not: %d\n", result == NULL);
    if (result == NULL)
       return NULL;
 
    // it is the responsibility of the loaders to make sure we get either 8 or 16 bit.
    STBI_ASSERT(ri.bits_per_channel == 8 || ri.bits_per_channel == 16);
-   printf("ri.bits_per_channel: %d\n", ri.bits_per_channel);
+   //printf("ri.bits_per_channel: %d\n", ri.bits_per_channel);
    if (ri.bits_per_channel != 8) {
       result = stbi__convert_16_to_8((stbi__uint16 *) result, *x, *y, req_comp == 0 ? *comp : req_comp);
       ri.bits_per_channel = 8;
@@ -941,13 +937,8 @@ STBIDEF stbi_us *stbi_load_16_from_memory(stbi_uc const *buffer, int len, int *x
 
 STBIDEF stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int *y, int *comp, int req_comp)
 {
-   printf("buffer: %p, len: %d, x: %d, y: %d, comp: %d, req_comp: %d\n", buffer, len, *x, *y, *comp, req_comp);
-   printf("stbi_load_from_memory\n");
    stbi__context s;
    stbi__start_mem(&s,buffer,len);
-   printf("stbi__load_and_postprocess_8bit\n");
-   printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
-   printf("s->img_buffer: %p, s->img_buffer_end: %p,s->img_buffer_original: %p, s->img_buffer_original_end: %p,s->img_x: %d, s->img_y: %d, s->img_n: %d, s->img_out_n: %d, s->buflen: %d\n", s.img_buffer, s.img_buffer_end, s.img_buffer_original, s.img_buffer_original_end, s.img_x, s.img_y, s.img_n, s.img_out_n, s.buflen);
    return stbi__load_and_postprocess_8bit(&s,x,y,comp,req_comp);
 }
 
@@ -3123,7 +3114,7 @@ static int stbi__do_zlib(stbi__zbuf *a, char *obuf, int olen, int exp, int parse
    a->zout       = obuf;
    a->zout_end   = obuf + olen;
    a->z_expandable = exp;
-   printf("to stbi__parse_zlib\n");
+   //printf("to stbi__parse_zlib\n");
    return stbi__parse_zlib(a, parse_header);
 }
 
@@ -3736,22 +3727,20 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
    z->expanded = NULL;
    z->idata = NULL;
    z->out = NULL;
-   printf("stbi__parse_png_file\n");
+   //printf("stbi__parse_png_file\n");
    if (!stbi__check_png_header(s)) return 0;
-   printf("stbi__check_png_header is not 0\n");
+   //printf("stbi__check_png_header is not 0\n");
    if (scan == STBI__SCAN_type) return 1;
-   printf("scan != STBI__SCAN_type\n");
+   //printf("scan != STBI__SCAN_type\n");
    for (;;) {
       stbi__pngchunk c = stbi__get_chunk_header(s);
       printf("c.type = %u\n", c.type);
       switch (c.type) {
          case STBI__PNG_TYPE('C','g','B','I'):
-            printf("STBI__PNG_TYPE('C','g','B','I')\n");
             is_iphone = 1;
             stbi__skip(s, c.length);
             break;
          case STBI__PNG_TYPE('I','H','D','R'): {
-            printf("STBI__PNG_TYPE('I','H','D','R')\n");
             int comp,filter;
             if (!first) return stbi__err("multiple IHDR","Corrupt PNG");
             first = 0;
@@ -3783,7 +3772,6 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
          }
 
          case STBI__PNG_TYPE('P','L','T','E'):  {
-            printf("STBI__PNG_TYPE('P','L','T','E')\n");
             if (first) return stbi__err("first not IHDR", "Corrupt PNG");
             if (c.length > 256*3) return stbi__err("invalid PLTE","Corrupt PNG");
             pal_len = c.length / 3;
@@ -3798,7 +3786,6 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
          }
 
          case STBI__PNG_TYPE('t','R','N','S'): {
-            printf("STBI__PNG_TYPE('t','R','N','S')\n");
             if (first) return stbi__err("first not IHDR", "Corrupt PNG");
             if (z->idata) return stbi__err("tRNS after IDAT","Corrupt PNG");
             if (pal_img_n) {
@@ -3822,7 +3809,6 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
          }
 
          case STBI__PNG_TYPE('I','D','A','T'): {
-            printf("STBI__PNG_TYPE('I','D','A','T')\n");
             if (first) return stbi__err("first not IHDR", "Corrupt PNG");
             if (pal_img_n && !pal_len) return stbi__err("no PLTE","Corrupt PNG");
             if (scan == STBI__SCAN_header) { s->img_n = pal_img_n; return 1; }
@@ -3843,7 +3829,6 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
          }
 
          case STBI__PNG_TYPE('I','E','N','D'): {
-            printf("STBI__PNG_TYPE('I','E','N','D')\n");
             stbi__uint32 raw_len, bpl;
             if (first) return stbi__err("first not IHDR", "Corrupt PNG");
             if (scan != STBI__SCAN_load) return 1;
@@ -3889,7 +3874,6 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
 
          default:
             // if critical, fail
-            printf("default\n");
             if (first) return stbi__err("first not IHDR", "Corrupt PNG");
             if ((c.type & (1 << 29)) == 0) {
                #ifndef STBI_NO_FAILURE_STRINGS
@@ -3906,19 +3890,17 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
             break;
       }
       // end of PNG chunk, read and skip CRC
-      printf("to stbi__get32be\n");
       stbi__get32be(s);
    }
 }
 
 static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, stbi__result_info *ri)
 {
-   printf("p:%p, x:%p, y:%p, n:%p, req_comp:%d, ri:%p\n", p, x, y, n, req_comp, ri);
+   //printf("p:%p, x:%p, y:%p, n:%p, req_comp:%d, ri:%p\n", p, x, y, n, req_comp, ri);
    void *result=NULL;
    if (req_comp < 0 || req_comp > 4) return stbi__errpuc("bad req_comp", "Internal error");
-   printf("to stbi__parse_png_file\n");
+   //printf("to stbi__parse_png_file\n");
    if (stbi__parse_png_file(p, STBI__SCAN_load, req_comp)) {
-      printf("p->depth:%d\n", p->depth);
       if (p->depth <= 8)
          ri->bits_per_channel = 8;
       else if (p->depth == 16)
@@ -3926,23 +3908,19 @@ static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, st
       else
          return stbi__errpuc("bad bits_per_channel", "PNG not supported: unsupported color depth");
       result = p->out;
-      printf("result:%p\n", result);
       p->out = NULL;
       if (req_comp && req_comp != p->s->img_out_n) {
-         printf("req_comp:%d, p->s->img_out_n:%d\n", req_comp, p->s->img_out_n);
          if (ri->bits_per_channel == 8)
             result = stbi__convert_format((unsigned char *) result, p->s->img_out_n, req_comp, p->s->img_x, p->s->img_y);
          else
             result = stbi__convert_format16((stbi__uint16 *) result, p->s->img_out_n, req_comp, p->s->img_x, p->s->img_y);
          p->s->img_out_n = req_comp;
-         printf("result:%p\n", result);
          if (result == NULL) return result;
       }
       *x = p->s->img_x;
       *y = p->s->img_y;
       if (n) *n = p->s->img_n;
    }
-   printf("result:%p\n", result);
    STBI_FREE(p->out);      p->out      = NULL;
    STBI_FREE(p->expanded); p->expanded = NULL;
    STBI_FREE(p->idata);    p->idata    = NULL;
@@ -3952,10 +3930,10 @@ static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, st
 
 static void *stbi__png_load(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri)
 {
-   printf("s:%p, x:%p, y:%p, comp:%p, req_comp:%d, ri:%p\n", s, x, y, comp, req_comp, ri);
+   //printf("s:%p, x:%p, y:%p, comp:%p, req_comp:%d, ri:%p\n", s, x, y, comp, req_comp, ri);
    stbi__png p;
    p.s = s;
-   printf("to stbi__do_png\n");
+   //printf("to stbi__do_png\n");
    return stbi__do_png(&p, x,y,comp,req_comp, ri);
 }
 
