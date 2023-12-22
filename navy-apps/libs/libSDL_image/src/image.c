@@ -32,6 +32,7 @@ SDL_Surface* IMG_Load(const char *filename) {
   printf("释放buf\n");
   return ret;*/
   int fd = open(filename, 0, 0);
+  printf("fd:%d\n",fd);
   assert(fd != -1);
   lseek(fd, 0, SEEK_END);
   printf("到文件末尾\n");
