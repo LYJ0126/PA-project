@@ -3733,11 +3733,11 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
    z->expanded = NULL;
    z->idata = NULL;
    z->out = NULL;
-
+   printf("stbi__parse_png_file\n");
    if (!stbi__check_png_header(s)) return 0;
-
+   printf("stbi__check_png_header is not 0\n");
    if (scan == STBI__SCAN_type) return 1;
-
+   printf("scan == STBI__SCAN_type\n");
    for (;;) {
       stbi__pngchunk c = stbi__get_chunk_header(s);
       switch (c.type) {
