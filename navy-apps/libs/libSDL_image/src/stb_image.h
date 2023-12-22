@@ -3158,8 +3158,10 @@ STBIDEF char *stbi_zlib_decode_malloc_guesssize_headerflag(const char *buffer, i
    a.zbuffer_end = (stbi_uc *) buffer + len;
    if (stbi__do_zlib(&a, p, initial_size, 1, parse_header)) {
       if (outlen) *outlen = (int) (a.zout - a.zout_start);
+      printf("a.zout_start: %p\n", a.zout_start);
       return a.zout_start;
    } else {
+      printf("else a.zout_start: %p\n", a.zout_start);
       STBI_FREE(a.zout_start);
       return NULL;
    }
