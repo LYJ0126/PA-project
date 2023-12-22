@@ -185,6 +185,9 @@ static SDL_Surface* STBIMG__CreateSurfaceImpl(STBIMG__image img, int origin_has_
 
 SDL_STBIMG_DEF SDL_Surface* STBIMG_LoadFromMemory(const unsigned char* buffer, int length)
 {
+	printf("buffer:%p\n",buffer);
+	printf("length:%d\n",length);
+	printf("buffer:%s\n",buffer);
 	STBIMG__image img = {0};
 	int bppToUse = 0;
 	int inforet = 0;
@@ -222,9 +225,11 @@ SDL_STBIMG_DEF SDL_Surface* STBIMG_LoadFromMemory(const unsigned char* buffer, i
 		return NULL;
 	}
 	img.format = bppToUse;
-
+	printf("ret:%p\n",ret);
+	printf("img.w:%d,img.h:%d,img.format:%d,img.data:%p\n",img.w,img.h,img.format,img.data);
 	ret = STBIMG__CreateSurfaceImpl(img, origin_has_alpha, 1);
-	printf("STBIMG__CreateSurfaceImpl\n");
+	printf("ret:%p\n",ret);
+	printf("finish STBIMG__CreateSurfaceImpl\n");
 	if(ret == NULL)
 	{
 		// no need to log an error here, it was an SDL error which should still be available through SDL_GetError()
