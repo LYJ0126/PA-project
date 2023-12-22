@@ -27,7 +27,7 @@ void init_proc() {
 
   // load program here
   //printf("start naive_uload\n");
-  naive_uload(NULL, "/bin/pal");
+  naive_uload(NULL, "/bin/bird");
   //printf("end naive_uload\n");
 }
 
