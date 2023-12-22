@@ -26,11 +26,11 @@ static void sh_handle_cmd(const char *cmd) {
   //printf("\n");
   if(cmd[0] == '\n') return;
   char *args = strtok((char *)cmd, "\n");
-  printf("args: %s\n", args);
-  printf("args length: %d\n", strlen(args));
-  printf("strcmp(args, \"help\"): %d\n", strcmp(args, "help"));
-  printf("strcmp(args, \"hello world\"): %d\n", strcmp(args, "hello world"));
-  printf("strcmp(args, \"exit\"): %d\n", strcmp(args, "exit"));
+  //printf("args: %s\n", args);
+  //printf("args length: %d\n", strlen(args));
+  //printf("strcmp(args, \"help\"): %d\n", strcmp(args, "help"));
+  //printf("strcmp(args, \"hello world\"): %d\n", strcmp(args, "hello world"));
+  //printf("strcmp(args, \"exit\"): %d\n", strcmp(args, "exit"));
   if (strcmp(args, "help") == 0) {
     sh_printf("Built-in commands:\n");
     sh_printf("  help: show this message\n");
