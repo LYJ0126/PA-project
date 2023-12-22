@@ -3902,6 +3902,7 @@ static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, st
    printf("p:%p, x:%p, y:%p, n:%p, req_comp:%d, ri:%p\n", p, x, y, n, req_comp, ri);
    void *result=NULL;
    if (req_comp < 0 || req_comp > 4) return stbi__errpuc("bad req_comp", "Internal error");
+   printf("to stbi__parse_png_file\n");
    if (stbi__parse_png_file(p, STBI__SCAN_load, req_comp)) {
       printf("p->depth:%d\n", p->depth);
       if (p->depth <= 8)
