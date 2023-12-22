@@ -84,10 +84,12 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     for(int j = 0; j < w; ++ j) {
       int index = i * s->w + j;
       if(s->format->BytesPerPixel == 1) {
-        pixels[pos ++] = s->format->palette->colors[s->pixels[start + index]].val;
+        //pixels[pos ++] = s->format->palette->colors[s->pixels[start + index]].val;
+        SDL_Color color = s->format->palette->colors[s->pixels[start + index]];
+        pixels[pos ++] = color.a << 24 | color.r << 16 | color.g << 8 | color.b;
       }
       else {
-        pixels[pos ++] = s->pixels[start + 4 * index + 3] << 24 | s->pixels[start + 4 * index + 2] << 16 | s->pixels[start + 4 * index + 1] << 8 | s->pixels[start + 4 * index + 0];
+        pixels[pos ++] = s->pixels[start + 4 * index + 3] << 24 | s->pixels[start + 4 * index + 2] << 16 | s->pixels[start + 4 * index + 1] << 8 | s->pixels[start + 4 * index];
       }
     }
   }
