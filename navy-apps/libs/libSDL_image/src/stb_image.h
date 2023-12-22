@@ -3894,6 +3894,7 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
             break;
       }
       // end of PNG chunk, read and skip CRC
+      printf("to stbi__get32be\n");
       stbi__get32be(s);
    }
 }
