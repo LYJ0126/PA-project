@@ -36,7 +36,7 @@ static void sh_handle_cmd(const char *cmd) {
     sh_printf("  help: show this message\n");
     sh_printf("  hello world: say hello to the world\n");
     sh_printf("  clear: clear the screen\n");
-    sh_printf("  exit: exit the shell\n");
+    //sh_printf("  exit: exit the shell\n");
     return;
   } 
   else if (strcmp(cmd, "hello world") == 0) {
@@ -44,13 +44,13 @@ static void sh_handle_cmd(const char *cmd) {
     return;
   } 
   else if(strcmp(cmd, "clear") == 0) {
-    term->clear();
-    return;
-  }
-  else if (strcmp(cmd, "exit") == 0) {
     exit(0);
     return;
   }
+  /*else if (strcmp(cmd, "exit") == 0) {
+    exit(0);
+    return;
+  }*/
   //文件处理
   if(args == NULL) return;
   if(execvp(args, NULL) == -1) {
