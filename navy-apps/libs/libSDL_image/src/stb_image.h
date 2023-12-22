@@ -3144,15 +3144,15 @@ STBIDEF char *stbi_zlib_decode_malloc_guesssize_headerflag(const char *buffer, i
    stbi__zbuf a;
    char *p = (char *) stbi__malloc(initial_size);
    if (p == NULL) return NULL;
-   printf("p: %p\n", p);
+   //printf("p: %p\n", p);
    a.zbuffer = (stbi_uc *) buffer;
    a.zbuffer_end = (stbi_uc *) buffer + len;
    if (stbi__do_zlib(&a, p, initial_size, 1, parse_header)) {
       if (outlen) *outlen = (int) (a.zout - a.zout_start);
-      printf("a.zout_start: %p\n", a.zout_start);
+      //printf("a.zout_start: %p\n", a.zout_start);
       return a.zout_start;
    } else {
-      printf("else a.zout_start: %p\n", a.zout_start);
+      //printf("else a.zout_start: %p\n", a.zout_start);
       STBI_FREE(a.zout_start);
       return NULL;
    }
@@ -3734,7 +3734,7 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
    //printf("scan != STBI__SCAN_type\n");
    for (;;) {
       stbi__pngchunk c = stbi__get_chunk_header(s);
-      printf("c.type = %u\n", c.type);
+      //printf("c.type = %u\n", c.type);
       switch (c.type) {
          case STBI__PNG_TYPE('C','g','B','I'):
             is_iphone = 1;
@@ -3838,7 +3838,7 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
             bpl = (s->img_x * z->depth + 7) / 8; // bytes per line, per component
             raw_len = bpl * s->img_y * s->img_n /* pixels */ + s->img_y /* filter mode per row */;
             z->expanded = (stbi_uc *) stbi_zlib_decode_malloc_guesssize_headerflag((char *) z->idata, ioff, raw_len, (int *) &raw_len, !is_iphone);
-            printf("z->expanded:%p\n", z->expanded);
+            //printf("z->expanded:%p\n", z->expanded);
             if (z->expanded == NULL) return 0; // zlib should set error
             STBI_FREE(z->idata); z->idata = NULL;
             if ((req_comp == s->img_n+1 && req_comp != 3 && !pal_img_n) || has_trans)
