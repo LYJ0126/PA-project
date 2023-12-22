@@ -12,7 +12,7 @@ SDL_Surface* IMG_Load_RW(SDL_RWops *src, int freesrc) {
 }
 
 SDL_Surface* IMG_Load(const char *filename) {
-  /*printf("IMG_Load: %s\n", filename);
+  printf("IMG_Load: %s\n", filename);
   FILE *fp = fopen(filename, "r");
   assert(fp != NULL);
   fseek(fp, 0, SEEK_END);
@@ -30,8 +30,8 @@ SDL_Surface* IMG_Load(const char *filename) {
   fclose(fp);
   free(buf);
   printf("释放buf\n");
-  return ret;*/
-  int fd = open(filename, 0, 0);
+  return ret;
+  /*int fd = open(filename, 0, 0);
   printf("fd:%d\n",fd);
   assert(fd != -1);
   long size = lseek(fd, 0, SEEK_END);
@@ -51,7 +51,7 @@ SDL_Surface* IMG_Load(const char *filename) {
   close(fd);
   free(buf);
   printf("释放buf\n");
-  return ret;
+  return ret;*/
 }
 
 int IMG_isPNG(SDL_RWops *src) {
