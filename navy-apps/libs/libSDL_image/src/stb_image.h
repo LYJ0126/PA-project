@@ -3931,8 +3931,10 @@ static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, st
 
 static void *stbi__png_load(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri)
 {
+   printf("s:%p, x:%p, y:%p, comp:%p, req_comp:%d, ri:%p\n", s, x, y, comp, req_comp, ri);
    stbi__png p;
    p.s = s;
+   printf("to stbi__do_png\n");
    return stbi__do_png(&p, x,y,comp,req_comp, ri);
 }
 
