@@ -93,8 +93,11 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
       }
     }
   }
-  printf("x:%d,y:%d,w:%d,h:%d\n",x,y,w,h);
-  printf("s->w:%d,s->h:%d\n",s->w,s->h);
+  /*printf("x:%d,y:%d,w:%d,h:%d\n",x,y,w,h);
+  printf("s->w:%d,s->h:%d\n",s->w,s->h);*/
+  //居中显示
+  x += (s->w - w) / 2;
+  y += (s->h - h) / 2;
   NDL_DrawRect(pixels, x, y, w, h);
   free(pixels);
 }
