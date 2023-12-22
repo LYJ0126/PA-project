@@ -25,7 +25,8 @@ static void sh_prompt() {
 static void sh_handle_cmd(const char *cmd) {
   printf("\n");
   if(cmd[0] == '\n') return;
-  if (strcmp(cmd, "help") == 0) {
+  char *args = strtok((char *)cmd, "\n");
+  if (strcmp(args, "help") == 0) {
     sh_printf("Built-in commands:\n");
     sh_printf("  help: show this message\n");
     sh_printf("  hello world: say hello to the world\n");
@@ -35,11 +36,10 @@ static void sh_handle_cmd(const char *cmd) {
   } else if (strcmp(cmd, "exit") == 0) {
     exit(0);
   }
-  //获取文件名
-  char *args = strtok((char *)cmd, "\n");
+  //文件处理
   if(args == NULL) return;
   if(execvp(args, NULL) == -1) {
-    sh_printf("文件为找到\n");
+    sh_printf("文件未找到\n");
   }
   return;
 }
