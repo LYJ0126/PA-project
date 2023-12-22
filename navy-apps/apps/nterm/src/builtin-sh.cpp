@@ -23,9 +23,11 @@ static void sh_prompt() {
 }
 
 static void sh_handle_cmd(const char *cmd) {
-  printf("\n");
+  //printf("\n");
   if(cmd[0] == '\n') return;
   char *args = strtok((char *)cmd, "\n");
+  printf("args: %s\n", args);
+  printf("args length: %d\n", strlen(args));
   if (strcmp(args, "help") == 0) {
     sh_printf("Built-in commands:\n");
     sh_printf("  help: show this message\n");
