@@ -764,6 +764,8 @@ static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int re
 {
    printf("stbi__load_main\n");
    printf("x: %d, y: %d, comp: %d, req_comp: %d\n", *x, *y, *comp, req_comp);
+   printf("ri: %p\n", ri);
+   printf("ri->bits_per_channel: %d, ri->channel_order: %d, ri->num_channels: %d\n", ri->bits_per_channel, ri->channel_order, ri->num_channels);
    memset(ri, 0, sizeof(*ri)); // make sure it's initialized if we add new fields
    ri->bits_per_channel = 8; // default is 8 so most paths don't have to be changed
    ri->channel_order = STBI_ORDER_RGB; // all current input & output are this, but this is here so we can add BGR order
