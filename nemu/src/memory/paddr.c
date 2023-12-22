@@ -72,3 +72,13 @@ void paddr_write(paddr_t addr, int len, word_t data) {
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
+
+void save_mem(FILE *fp) {
+  size_t len = fwrite(pmem, 1, CONFIG_MSIZE, fp);
+  assert(len == CONFIG_MSIZE);
+}
+
+void load_mem(FILE *fp) {
+  size_t len = fread(pmem, 1, CONFIG_MSIZE, fp);
+  assert(len == CONFIG_MSIZE);
+}

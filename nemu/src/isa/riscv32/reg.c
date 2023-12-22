@@ -46,3 +46,13 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 	printf("NO register named \"%s\"\n",s);
   return 0;
 }
+
+void save_regs(FILE *fp){
+	size_t len = fwrite(&cpu,1,sizeof(cpu),fp);
+	assert(len==sizeof(cpu));
+}
+
+void load_regs(FILE *fp){
+	size_t len = fread(&cpu,1,sizeof(cpu),fp);
+	assert(len==sizeof(cpu));
+}

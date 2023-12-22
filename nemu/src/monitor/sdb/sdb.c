@@ -52,6 +52,10 @@ word_t paddr_read(paddr_t addr, int len);
 void set_watchpoint(char* expression);
 void delete_watchpoint(int no);
 void sdb_watchpoint_display();
+void save_regs(FILE *fp);
+void save_mem(FILE *fp);
+void load_regs(FILE *fp);
+void load_mem(FILE *fp);
 static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
@@ -59,6 +63,8 @@ static int cmd_x(char *args);
 static int cmd_p(char *args);
 static int cmd_w(char *args);
 static int cmd_d(char *args);
+static int cmd_save(char *args);
+static int cmd_load(char *args);
 
 static struct {
   const char *name;
@@ -76,6 +82,8 @@ static struct {
 	{"p","表达式求值,格式为p EXPR,求出表达式EXPR的值",cmd_p},//表达式求值
 	{"w","设置监视点,格式为w EXPR,求出表达式EXPR的值。当EXPR发生变化,暂停程序执行",cmd_w},//设置监视点
 	{"d","格式为d N,删除编号为N的监视点",cmd_d},//删除监视点
+  {"save","格式为save [path],将NEMU的当前状态保存到path指示的文件中",cmd_save},//保存快照
+  {"load","格式为load [path],从path指示的文件中读入NEMU的状态",cmd_load},//读入快照
 };
 
 #define NR_CMD ARRLEN(cmd_table)//用宏定义NR_CMD为cmd_table的长度
@@ -180,6 +188,48 @@ static int cmd_d(char *args){
 	}
 	else delete_watchpoint(atoi(args));
 	return 0;
+}
+
+static int cmd_save(char *args){
+  if(args == NULL){
+    printf("未输入文件名\n");
+    return 0;
+  }
+  char *name = strtok(NULL, " ");//获取文件名
+  char filename[100];
+  strcpy(filename, "~/ics2023/nemu/src/monitor/snapshot/");
+  strcat(filename, name);//~/ics2023/nemu/src/monitor/snapshot/name
+  FILE *fp = fopen(filename, "w");
+  if(fp == NULL){
+    printf("文件打开失败\n");
+    return 0;
+  }
+  save_regs(fp);
+  save_mem(fp);
+  fclose(fp);
+  printf("保存至:%s\n",filename);
+  return 0;
+}
+
+static int cmd_load(char *args){
+  if(args == NULL){
+    printf("未输入文件名\n");
+    return 0;
+  }
+  char *name = strtok(NULL, " ");//获取文件名
+  char filename[100];
+  strcpy(filename, "~/ics2023/nemu/src/monitor/snapshot/");
+  strcat(filename, name);//~/ics2023/nemu/src/monitor/snapshot/name
+  FILE *fp = fopen(filename, "r");
+  if(fp == NULL){
+    printf("文件打开失败\n");
+    return 0;
+  }
+  load_regs(fp);
+  load_mem(fp);
+  fclose(fp);
+  printf("读取自:%s\n",filename);
+  return 0;
 }
 
 void sdb_mainloop() {
