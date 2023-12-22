@@ -197,8 +197,8 @@ static int cmd_save(char *args){
   }
   char *name = strtok(NULL, " ");//获取文件名
   char filename[100];
-  strcpy(filename, "~/ics2023/nemu/src/monitor/snapshot/");
-  strcat(filename, name);//~/ics2023/nemu/src/monitor/snapshot/name
+  strcpy(filename, "/home/lyj/ics2023/nemu/src/monitor/snapshot/");
+  strcat(filename, name);///home/lyj/ics2023/nemu/src/monitor/snapshot/name
   FILE *fp = fopen(filename, "w");
   if(fp == NULL){
     printf("文件打开失败\n");
@@ -218,8 +218,8 @@ static int cmd_load(char *args){
   }
   char *name = strtok(NULL, " ");//获取文件名
   char filename[100];
-  strcpy(filename, "~/ics2023/nemu/src/monitor/snapshot/");
-  strcat(filename, name);//~/ics2023/nemu/src/monitor/snapshot/name
+  strcpy(filename, "/home/lyj/ics2023/nemu/src/monitor/snapshot/");
+  strcat(filename, name);///home/lyj/ics2023/nemu/src/monitor/snapshot/name
   FILE *fp = fopen(filename, "r");
   if(fp == NULL){
     printf("文件打开失败\n");
