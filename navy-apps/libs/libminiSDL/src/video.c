@@ -93,6 +93,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
       }
     }
   }
+  printf("x:%d,y:%d,w:%d,h:%d\n",x,y,w,h);
   NDL_DrawRect(pixels, x, y, w, h);
   free(pixels);
 }
