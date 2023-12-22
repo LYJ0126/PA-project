@@ -28,9 +28,9 @@ static void sh_handle_cmd(const char *cmd) {
   if (strcmp(cmd, "help") == 0) {
     sh_printf("Built-in commands:\n");
     sh_printf("  help: show this message\n");
-    sh_printf("  hello: say hello to the world\n");
+    sh_printf("  hello world: say hello to the world\n");
     sh_printf("  exit: exit the shell\n");
-  } else if (strcmp(cmd, "hello") == 0) {
+  } else if (strcmp(cmd, "hello world") == 0) {
     sh_printf("Hello, world!\n");
   } else if (strcmp(cmd, "exit") == 0) {
     exit(0);
