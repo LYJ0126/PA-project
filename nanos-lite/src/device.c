@@ -51,7 +51,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   int width = io_read(AM_GPU_CONFIG).width;
   int height = io_read(AM_GPU_CONFIG).height;
   sprintf((char*)buf, "WIDTH:%d\nHEIGHT:%d\n", width, height);
-  return len;
+  return strlen((char *)buf);
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
