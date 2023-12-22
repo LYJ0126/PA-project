@@ -3737,9 +3737,10 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
    if (!stbi__check_png_header(s)) return 0;
    printf("stbi__check_png_header is not 0\n");
    if (scan == STBI__SCAN_type) return 1;
-   printf("scan == STBI__SCAN_type\n");
+   printf("scan != STBI__SCAN_type\n");
    for (;;) {
       stbi__pngchunk c = stbi__get_chunk_header(s);
+      printf("c.type = %u\n", c.type);
       switch (c.type) {
          case STBI__PNG_TYPE('C','g','B','I'):
             is_iphone = 1;
