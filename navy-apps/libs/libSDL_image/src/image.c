@@ -43,6 +43,7 @@ SDL_Surface* IMG_Load(const char *filename) {
   char *buf = (char*)malloc(size);
   int tempsize = read(fd, buf, size);
   //printf("buf:%s\n",buf);
+  printf("tempsize:%d\n",tempsize);
   assert(tempsize == size);
   SDL_Surface *ret = STBIMG_LoadFromMemory(buf, (int)size);
   printf("加载完成\n");
