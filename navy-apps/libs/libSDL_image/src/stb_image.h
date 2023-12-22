@@ -3899,6 +3899,7 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
 
 static void *stbi__do_png(stbi__png *p, int *x, int *y, int *n, int req_comp, stbi__result_info *ri)
 {
+   printf("p:%p, x:%p, y:%p, n:%p, req_comp:%d, ri:%p\n", p, x, y, n, req_comp, ri);
    void *result=NULL;
    if (req_comp < 0 || req_comp > 4) return stbi__errpuc("bad req_comp", "Internal error");
    if (stbi__parse_png_file(p, STBI__SCAN_load, req_comp)) {
