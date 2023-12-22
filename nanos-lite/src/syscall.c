@@ -8,6 +8,7 @@ extern size_t fs_write(int fd, const void *buf, size_t len);
 extern size_t fs_lseek(int fd, size_t offset, int whence);
 extern int fs_close(int fd);
 extern int mygettimeofday(struct timeval *tv, struct timezone *tz);
+extern int execve(const char *pathname, char *const argv[],char *const envp[]);
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;//a7
@@ -16,7 +17,11 @@ void do_syscall(Context *c) {
   a[3] = c->GPR4;//a2
   a[4] = c->GPRx;//a0
   switch (a[0]) {
-    case 0: halt(0);break;
+    case 0: {
+      //printf("SYS_exit, a0 = %d\n", a[1]); 
+      execve("/bin/menu", NULL, NULL);
+      break;
+    }
     case 1: printf("SYS_yield\n"); yield(); c->GPRx = 0; break;
     case 2: {
       //printf("SYS_open, a0 = %s, a1 = %d\n", a[1], a[2]); 
@@ -59,6 +64,11 @@ void do_syscall(Context *c) {
       break;
     }
     case 9: c->GPRx = 0; break;
+    case 13: {
+      printf("SYS_execve, a0 = %s, a1 = %x, a2 = %x\n", a[1], a[2], a[3]);
+      c->GPRx = execve((const char *)a[1], (char **const)a[2], (char **const)a[3]);
+      break;
+    }
     case 19: {
       //printf("SYS_gettimeofday, a0 = %x, a1 = %x\n", a[1], a[2]);
       struct timeval *tv = (struct timeval *)a[1];

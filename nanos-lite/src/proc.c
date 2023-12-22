@@ -1,6 +1,7 @@
 #include <proc.h>
 
 extern void naive_uload(PCB *pcb, const char *filename);
+extern int fs_open(const char *pathname, int flags, int mode);
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
@@ -27,10 +28,19 @@ void init_proc() {
 
   // load program here
   //printf("start naive_uload\n");
-  naive_uload(NULL, "/bin/pal");
+  naive_uload(NULL, "/bin/menu");
   //printf("end naive_uload\n");
 }
 
 Context* schedule(Context *prev) {
   return NULL;
+}
+
+int execve(const char *pathname, char *const argv[],char *const envp[]){
+  int fd = fs_open(pathname, 0, 0);
+  if(fd == -1) return -1;
+  //printf("fd:%d\n",fd);
+  //printf("pathname:%s\n",pathname);
+  naive_uload(NULL, pathname);
+  return 0;
 }
