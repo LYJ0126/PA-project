@@ -23,14 +23,14 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   // printf("swidth = %d, sheight = %d, sw = %d, sh = %d, sstart = %d, dwidth = %d, dheight = %d, dw = %d, dh = %d, dstart = %d\n", swidth, sheight, sw, sh, sstart, dwidth, dheight, dw, dh, dstart);
   for (int i = 0; i < sh; ++i)
   {
-    /*if (dst->format->BytesPerPixel == 1)
+    if (dst->format->BytesPerPixel == 1)
     {
       memcpy(dst->pixels + dstart + i * dwidth, src->pixels + sstart + i * swidth, sw);
     }
     else
-    {*/
+    {
       memcpy((uint32_t *)dst->pixels + dstart + i * dwidth, (uint32_t *)src->pixels + sstart + i * swidth, 4 * sw);
-    //}
+    }
   }
 }
 
@@ -61,7 +61,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color)
   }*/
   for (int i = 0; i < h; ++i)
   {
-    /*if (dst->format->BytesPerPixel == 1)
+    if (dst->format->BytesPerPixel == 1)
     {
       //memset(dst->pixels + start + i * width, color, w);
       SDL_Color c;
@@ -76,7 +76,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color)
       }
     }
     else
-    {*/
+    {
       for (int j = 0; j < w; ++j)
       {
         dst->pixels[4 * (start + i * width + j)] = color & 0xff;
@@ -84,7 +84,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color)
         dst->pixels[4 * (start + i * width + j) + 2] = (color >> 16) & 0xff;
         dst->pixels[4 * (start + i * width + j) + 3] = (color >> 24) & 0xff;
       }
-    //}
+    }
   }
 }
 
@@ -106,16 +106,16 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h)
     for (int j = 0; j < w; ++j)
     {
       int index = i * s->w + j;
-      /*if (s->format->BytesPerPixel == 1)
+      if (s->format->BytesPerPixel == 1)
       {
         // pixels[pos ++] = s->format->palette->colors[s->pixels[start + index]].val;
         SDL_Color color = s->format->palette->colors[s->pixels[start + index]];
         pixels[pos++] = color.a << 24 | color.r << 16 | color.g << 8 | color.b;
       }
       else
-      {*/
+      {
         pixels[pos++] = s->pixels[start + 4 * index + 3] << 24 | s->pixels[start + 4 * index + 2] << 16 | s->pixels[start + 4 * index + 1] << 8 | s->pixels[start + 4 * index];
-      //}
+      }
     }
   }
   /*printf("x:%d,y:%d,w:%d,h:%d\n",x,y,w,h);
