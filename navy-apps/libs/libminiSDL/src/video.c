@@ -72,7 +72,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color)
       for (int j = 0; j < w; ++j)
       {
         dst->format->palette->colors[dst->pixels[start + i * width + j]] = c;
-        dst->pixels[start + i * width + j] = color;
+        //dst->pixels[start + i * width + j] = color;
       }
     }
     else
