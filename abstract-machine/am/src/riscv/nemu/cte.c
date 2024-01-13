@@ -71,6 +71,8 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   memset(c, 0, sizeof(Context));//将Context结构体清零
   //将栈顶指针保存在Context记录的sp寄存器对应的位置
   //c->gpr[2] = (uintptr_t)kstack.end;
+  //设置内核线程参数
+  c-> GPR2 = (uintptr_t)arg;
   //设置内核线程入口
   c->mepc = (uintptr_t)entry;
   return c;
