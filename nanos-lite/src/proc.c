@@ -27,7 +27,7 @@ void switch_boot_pcb() {
 void hello_fun(void *arg) {
   while (1) {
     putch("?CD"[(uintptr_t)arg > 2 ? 0 : (uintptr_t)arg]);
-    for (int volatile i = 0; i < 1000; i++) ;
+    for (int volatile i = 0; i < 100; i++) ;
     yield();
   }
   /*int j = 1;
