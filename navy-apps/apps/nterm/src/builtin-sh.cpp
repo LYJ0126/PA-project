@@ -33,9 +33,9 @@ static void sh_handle_cmd(const char *cmd) {
   //printf("strcmp(args, \"exit\"): %d\n", strcmp(args, "exit"));
   if (strcmp(args, "help") == 0) {
     sh_printf("Built-in commands:\n");
-    sh_printf("  help: show this message\n");
-    sh_printf("  hello world: say hello to the world\n");
-    sh_printf("  clear: clear the screen\n");
+    sh_printf("help: show this message\n");
+    sh_printf("hello world: say hello to the world\n");
+    sh_printf("clear: clear the screen\n");
     //sh_printf("  exit: exit the shell\n");
     return;
   } 

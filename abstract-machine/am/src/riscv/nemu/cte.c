@@ -69,7 +69,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   //return NULL;
   Context *c = (Context *)((uint8_t* )kstack.end - sizeof(Context));//kstack.end是栈顶指针,分配一个Context结构体大小的空间
   memset(c, 0, sizeof(Context));//将Context结构体清零
-  //将栈顶指针保存在Context记录的sp寄存器对应的位置
+  //将栈顶指针保存在Context记录的sp寄存器对应的位
   //c->gpr[2] = (uintptr_t)kstack.end;
   //设置内核线程参数
   c-> GPR2 = (uintptr_t)arg;
