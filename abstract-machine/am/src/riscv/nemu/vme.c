@@ -70,5 +70,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  return NULL;
+  //return NULL;
+  Context *c = (Context *)((uint8_t* )kstack.end - sizeof(Context));//kstack.end是栈顶指针,分配一个Context结构体大小的空间
+  memset(c, 0, sizeof(Context));//将Context结构体清零
+  //将栈顶指针保存在Context记录的sp寄存器对应的位
+  //c->gpr[2] = (uintptr_t)kstack.end;
+  
+  //设置用户进程入口
+  c->mepc = (uintptr_t)entry;
+  return c;
 }

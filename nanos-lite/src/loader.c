@@ -71,3 +71,14 @@ void naive_uload(PCB *pcb, const char *filename) {
   ((void(*)())entry) ();
 }
 
+void context_uload(PCB *pcb, const char *filename) {
+  //printf("context_uload\n");
+  uintptr_t entry = loader(pcb, filename);
+  Area ustack;
+  ustack.start = (void *)pcb;
+  ustack.end = (void *)((uint8_t* )pcb + STACK_SIZE);
+  Context *c = ucontext(NULL, ustack, (void *)entry);
+  pcb->cp = c;
+}
+
+

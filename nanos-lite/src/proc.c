@@ -2,6 +2,7 @@
 
 extern void naive_uload(PCB *pcb, const char *filename);
 extern int fs_open(const char *pathname, int flags, int mode);
+extern void context_uload(PCB *pcb, const char *filename);
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
@@ -18,7 +19,6 @@ void context_kload(PCB*pcb, void (*entry)(void *), void *arg) {
   pcb->cp = c;
   //printf("pcb->cp:%x\n",pcb->cp);
 }
-
 
 void switch_boot_pcb() {
   current = &pcb_boot;
@@ -39,8 +39,8 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, (void *)1L);
-  context_kload(&pcb[1], hello_fun, (void *)2L);
+  //context_kload(&pcb[0], hello_fun, (void *)1L);
+  //context_kload(&pcb[1], hello_fun, (void *)2L);
   switch_boot_pcb();
 
   Log("Initializing processes...");
@@ -48,7 +48,7 @@ void init_proc() {
   // load program here
   //printf("start naive_uload\n");
   //naive_uload(NULL, "/bin/nterm");
-  naive_uload(NULL, "/bin/dummy");
+  //naive_uload(NULL, "/bin/dummy");
   //printf("end naive_uload\n");
 }
 
@@ -64,6 +64,6 @@ int execve(const char *pathname, char *const argv[],char *const envp[]){
   if(fd == -1) return -1;
   //printf("fd:%d\n",fd);
   //printf("pathname:%s\n",pathname);
-  naive_uload(NULL, pathname);
+  //naive_uload(NULL, pathname);
   return 0;
 }
