@@ -6,7 +6,7 @@ static Context* do_event(Event e, Context* c) {
   //printf("event ID = %d\n", e.event);
   switch (e.event) {
     case EVENT_YIELD:{
-      printf("Event yield, event ID = %d\n", e.event); 
+      //printf("Event yield, event ID = %d\n", e.event); 
       c = schedule(c);
       break;
     }
