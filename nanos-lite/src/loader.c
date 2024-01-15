@@ -71,14 +71,52 @@ void naive_uload(PCB *pcb, const char *filename) {
   ((void(*)())entry) ();
 }
 
-void context_uload(PCB *pcb, const char *filename) {
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   //printf("context_uload\n");
   uintptr_t entry = loader(pcb, filename);
   Area ustack;
-  ustack.start = (void *)pcb;
-  ustack.end = (void *)((uint8_t* )pcb + STACK_SIZE);
+  ustack.start = (void *)pcb->stack;
+  ustack.end = (void *)((uint8_t* )pcb->stack + STACK_SIZE);
+  //计算argc
+  int tempargc = 0;
+  while(argv[tempargc] != NULL) tempargc++;
+  //printf("tempargc:%d\n",tempargc);
+  int argc = tempargc;//参数个数
+  //计算envp参数个数
+  int numenvp = 0;
+  while(envp[numenvp] != NULL) numenvp++;
+  char *ustack_sp = heap.end;
+  //(uintptr_t*)ustack_sp = (uintptr_t*)heap.end;
+  char *args[argc];//记录每个参数的地址
+  char *envp_sp[numenvp];//记录每个环境变量的地址
+  for(int i = 0; i < argc; i++){
+    ustack_sp -= (strlen(argv[i]) + 1);
+    strcpy(ustack_sp, argv[i]);
+    args[i] = ustack_sp;
+  }
+  for(int i = 0; i < numenvp; i++){
+    ustack_sp -= (strlen(envp[i]) + 1);
+    strcpy(ustack_sp, envp[i]);
+    envp_sp[i] = ustack_sp;
+  }
+  char **sp = (char **)ustack_sp;
+  sp--;
+  *sp = NULL;
+  for(int i = numenvp - 1; i >= 0; i--){
+    sp--;
+    *sp = envp_sp[i];
+  }
+  sp--;
+  *sp = NULL;
+  for(int i = argc - 1; i >= 0; i--){
+    sp--;
+    *sp = args[i];
+  }
+  sp--;
+  *((int *)sp) = argc;
   Context *c = ucontext(NULL, ustack, (void *)entry);
   pcb->cp = c;
+  pcb->cp->GPRx = (uintptr_t)sp;
 }
 
 
