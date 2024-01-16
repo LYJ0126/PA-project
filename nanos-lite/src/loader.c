@@ -72,7 +72,7 @@ void naive_uload(PCB *pcb, const char *filename) {
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
-  //printf("context_uload\n");
+  printf("context_uload\n");
   uintptr_t entry = loader(pcb, filename);
   Area ustack;
   ustack.start = (void *)pcb->stack;
@@ -115,6 +115,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   sp--;
   *((int *)sp) = argc;
   Context *c = ucontext(NULL, ustack, (void *)entry);
+  printf("创建用户进程的上下文\n");
   pcb->cp = c;
   pcb->cp->GPRx = (uintptr_t)sp;
 }
