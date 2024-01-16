@@ -75,8 +75,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   printf("context_uload\n");
   uintptr_t entry = loader(pcb, filename);
   Area ustack;
-  ustack.start = (void *)pcb->stack;
-  ustack.end = (void *)((uint8_t* )pcb->stack + STACK_SIZE);
+  ustack.start = pcb->stack;
+  ustack.end = pcb->stack + STACK_SIZE;
   printf("ustack.start:%x,ustack.end:%x\n",ustack.start,ustack.end);
   //计算argc
   int tempargc = 0;
@@ -85,14 +85,15 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     while(argv[tempargc] != NULL) tempargc++;
   }
   int argc = tempargc;//参数个数
-  printf("argc:%d\n",argc);
+  //printf("argc:%d\n",argc);
   //计算envp参数个数
   int numenvp = 0;
   if(envp == NULL) numenvp = 0;
   else{
     while(envp[numenvp] != NULL) numenvp++;
   }
-  printf("numenvp:%d\n",numenvp);
+  //printf("numenvp:%d\n",numenvp);
+  /*
   char *ustack_sp = heap.end;
   //(uintptr_t*)ustack_sp = (uintptr_t*)heap.end;
   char *args[argc];//记录每个参数的地址
@@ -126,6 +127,36 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   printf("创建用户进程的上下文\n");
   pcb->cp = c;
   pcb->cp->GPRx = (uintptr_t)sp;
+  */
+  uintptr_t *ustack_sp = (uintptr_t *)heap.end;//ustack.end;
+  char *args[argc];//记录每个参数的地址
+  char *envp_sp[numenvp];//记录每个环境变量的地址
+  for(int i=0;i<argc;i++){
+    uint32_t len = strlen(argv[i]) + 1;
+    ustack_sp -= len;
+    strncpy((char *)ustack_sp, argv[i], len);
+    args[i] = (char *)ustack_sp;
+  }
+  for(int i=0;i<numenvp;i++){
+    uint32_t len = strlen(envp[i]) + 1;
+    ustack_sp -= len;
+    strncpy((char *)ustack_sp, envp[i], len);
+    envp_sp[i] = (char *)ustack_sp;
+  }
+  ustack_sp = ustack_sp - 1 - numenvp - 1 - argc - 1;
+  ustack_sp[0] = argc;
+  //uintptr_t *sp = ustack_sp;
+  for(int i=0;i<argc;++i){
+    ustack_sp[i+1] = (uintptr_t)args[i];
+  }
+  ustack_sp[argc+1] = 0;//argv[argc] = NULL
+  for(int i=0;i<numenvp;++i){
+    ustack_sp[argc+2+i] = (uintptr_t)envp_sp[i];
+  }
+  ustack_sp[argc+numenvp+2] = 0;//envp[numenvp] = NULL
+  Context *c = ucontext(NULL, ustack, (void *)entry);
+  pcb->cp = c;
+  pcb->cp->GPRx = (uintptr_t)ustack_sp;
 }
 
 
