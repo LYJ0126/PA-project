@@ -27,7 +27,7 @@ void switch_boot_pcb() {
 
 void hello_fun(void *arg) {
   while (1) {
-    putch("?CD"[(uintptr_t)arg > 2 ? 0 : (uintptr_t)arg]);
+    //putch("?CD"[(uintptr_t)arg > 2 ? 0 : (uintptr_t)arg]);
     for (int volatile i = 0; i < 100; i++) ;
     yield();
   }
@@ -50,9 +50,9 @@ void init_proc() {
   //switch_boot_pcb();
 
   Log("Initializing processes...");
-  context_kload(&pcb[0], hello_fun, (void *)1L);
-  //context_uload(&pcb[1],"/bin/menu",NULL,NULL);
-  context_uload(&pcb[1],"/bin/exec-test",NULL,NULL);
+  context_kload(&pcb[0], hello_fun, NULL);
+  context_uload(&pcb[1],"/bin/menu",NULL,NULL);
+  //context_uload(&pcb[1],"/bin/exec-test",NULL,NULL);
   switch_boot_pcb();
 
   // load program here
