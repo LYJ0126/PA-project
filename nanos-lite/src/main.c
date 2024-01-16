@@ -22,11 +22,12 @@ int main() {
 #ifdef HAS_CTE
   init_irq();
   //printf("end init_irq\n");
-  Log("Finish initializing interrupt/exception handler.");
+  //Log("Finish initializing interrupt/exception handler.");
 #endif
 
   init_fs();
 
+  Log("Initializing processes...");
   init_proc();
 
   Log("Finish initialization");
