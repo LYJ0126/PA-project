@@ -19,7 +19,7 @@ void do_syscall(Context *c) {
   switch (a[0]) {
     case 0: {
       //printf("SYS_exit, a0 = %d\n", a[1]); 
-      //execve("/bin/nterm", NULL, NULL);
+      execve("/bin/nterm", NULL, NULL);
       break;
     }
     case 1: printf("SYS_yield\n"); yield(); c->GPRx = 0; break;
