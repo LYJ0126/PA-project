@@ -15,6 +15,7 @@ extern size_t fs_read(int fd, void *buf, size_t len);
 extern size_t get_disk_offset(int fd);
 //extern size_t fs_write(int fd, const void *buf, size_t len);
 //size_t get_ramdisk_size();
+extern void* new_page(size_t nr_page);
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
   
@@ -72,12 +73,12 @@ void naive_uload(PCB *pcb, const char *filename) {
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
-  printf("context_uload\n");
+  //printf("context_uload\n");
   uintptr_t entry = loader(pcb, filename);
   Area ustack;
   ustack.start = pcb->stack;
   ustack.end = pcb->stack + STACK_SIZE;
-  printf("ustack.start:%x,ustack.end:%x\n",ustack.start,ustack.end);
+  //printf("ustack.start:%x,ustack.end:%x\n",ustack.start,ustack.end);
   //计算argc
   int tempargc = 0;
   if(argv == NULL) tempargc = 0;
@@ -128,7 +129,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp = c;
   pcb->cp->GPRx = (uintptr_t)sp;
   */
-  uintptr_t *ustack_sp = (uintptr_t *)heap.end;//ustack.end;
+  //uintptr_t *ustack_sp = (uintptr_t *)heap.end;//ustack.end;
+  uintptr_t *ustack_sp = (uintptr_t *)new_page(8);//32KB
   char *args[argc];//记录每个参数的地址
   char *envp_sp[numenvp];//记录每个环境变量的地址
   for(int i=0;i<argc;i++){

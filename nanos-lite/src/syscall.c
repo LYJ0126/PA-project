@@ -65,7 +65,7 @@ void do_syscall(Context *c) {
     }
     case 9: c->GPRx = 0; break;
     case 13: {
-      printf("SYS_execve, a0 = %s, a1 = %x, a2 = %x\n", a[1], a[2], a[3]);
+      //printf("SYS_execve, a0 = %s, a1 = %x, a2 = %x\n", a[1], a[2], a[3]);
       c->GPRx = execve((const char *)a[1], (char **const)a[2], (char **const)a[3]);
       break;
     }

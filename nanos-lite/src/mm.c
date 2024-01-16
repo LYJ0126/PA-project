@@ -1,9 +1,11 @@
 #include <memory.h>
 
 static void *pf = NULL;
-
+//extern PGSIZE;
 void* new_page(size_t nr_page) {
-  return NULL;
+  //return NULL;
+  pf += PGSIZE * nr_page;
+  return pf;
 }
 
 #ifdef HAS_VME

@@ -2,13 +2,14 @@
 
 extern void naive_uload(PCB *pcb, const char *filename);
 extern int fs_open(const char *pathname, int flags, int mode);
+extern int fs_close(int fd);
 extern void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]);
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
-
+uint32_t procnum = 0;//进程数
 
 void context_kload(PCB*pcb, void (*entry)(void *), void *arg) {
   Area kstack;
@@ -39,16 +40,18 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, (void *)1L);
+  //context_kload(&pcb[0], hello_fun, (void *)1L);
   //context_kload(&pcb[1], hello_fun, (void *)2L);
   //Log("finish context_kload");
   //context_uload(&pcb[1], "/bin/nterm", NULL, NULL);
-  char *argv[] = {"--skip", NULL};
-  context_uload(&pcb[1], "/bin/pal", argv, NULL);
+  /*char *argv[] = {"--skip", NULL};
+  context_uload(&pcb[1], "/bin/pal", argv, NULL);*/
   //Log("here Initializing processes...");
   switch_boot_pcb();
 
   Log("Initializing processes...");
+  context_uload(&pcb[0],"bin/menu",NULL,NULL);
+  switch_boot_pcb();
 
   // load program here
   //printf("start naive_uload\n");
@@ -67,8 +70,12 @@ Context* schedule(Context *prev) {
 int execve(const char *pathname, char *const argv[],char *const envp[]){
   int fd = fs_open(pathname, 0, 0);
   if(fd == -1) return -1;
+  fs_close(fd);
   //printf("fd:%d\n",fd);
   //printf("pathname:%s\n",pathname);
-  naive_uload(NULL, pathname);
+  //naive_uload(NULL, pathname);
+  context_uload(current, pathname, argv, envp);
+  switch_boot_pcb();
+  yield();
   return 0;
 }
