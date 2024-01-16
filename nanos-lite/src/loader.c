@@ -80,12 +80,18 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   printf("ustack.start:%x,ustack.end:%x\n",ustack.start,ustack.end);
   //计算argc
   int tempargc = 0;
-  while(argv[tempargc] != NULL) tempargc++;
+  if(argv == NULL) tempargc = 0;
+  else{
+    while(argv[tempargc] != NULL) tempargc++;
+  }
   int argc = tempargc;//参数个数
   printf("argc:%d\n",argc);
   //计算envp参数个数
   int numenvp = 0;
-  while(envp[numenvp] != NULL) numenvp++;
+  if(envp == NULL) numenvp = 0;
+  else{
+    while(envp[numenvp] != NULL) numenvp++;
+  }
   printf("numenvp:%d\n",numenvp);
   char *ustack_sp = heap.end;
   //(uintptr_t*)ustack_sp = (uintptr_t*)heap.end;
