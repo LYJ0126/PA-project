@@ -43,6 +43,7 @@ void init_proc() {
   //context_kload(&pcb[1], hello_fun, (void *)2L);
   char *argv[] = {"--skip", NULL};
   context_uload(&pcb[1], "/bin/pal", argv, NULL);
+  Log("here Initializing processes...");
   switch_boot_pcb();
 
   Log("Initializing processes...");
