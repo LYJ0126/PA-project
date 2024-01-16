@@ -44,7 +44,7 @@ void init_proc() {
   //Log("finish context_kload");
   //context_uload(&pcb[1], "/bin/nterm", NULL, NULL);
   char *argv[] = {"--skip", NULL};
-  context_uload(&pcb[2], "/bin/pal", argv, NULL);
+  context_uload(&pcb[1], "/bin/pal", argv, NULL);
   //Log("here Initializing processes...");
   switch_boot_pcb();
 
