@@ -14,7 +14,7 @@ Context* __am_irq_handle(Context *c) {
     printf("mepc: %x\n", c->mepc);*/
   if (user_handler) {
     Event ev = {0};
-    //printf("c->mcause: %d\n", c->mcause);
+    printf("c->mcause: %d\n", c->mcause);
     switch (c->mcause) {
       case 0: ev.event = EVENT_SYSCALL; break;
       case 1: ev.event = EVENT_SYSCALL; break;
