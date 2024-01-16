@@ -51,7 +51,8 @@ void init_proc() {
 
   Log("Initializing processes...");
   context_kload(&pcb[0], hello_fun, (void *)1L);
-  context_uload(&pcb[1],"/bin/menu",NULL,NULL);
+  //context_uload(&pcb[1],"/bin/menu",NULL,NULL);
+  context_uload(&pcb[1],"/bin/exec-test",NULL,NULL);
   switch_boot_pcb();
 
   // load program here
