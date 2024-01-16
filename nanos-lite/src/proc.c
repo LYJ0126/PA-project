@@ -47,7 +47,7 @@ void init_proc() {
   /*char *argv[] = {"--skip", NULL};
   context_uload(&pcb[1], "/bin/pal", argv, NULL);*/
   //Log("here Initializing processes...");
-  switch_boot_pcb();
+  //switch_boot_pcb();
 
   Log("Initializing processes...");
   context_uload(&pcb[0],"/bin/menu",NULL,NULL);
