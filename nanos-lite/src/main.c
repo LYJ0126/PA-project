@@ -21,7 +21,8 @@ int main() {
 
 #ifdef HAS_CTE
   init_irq();
-  printf("end init_irq\n");
+  //printf("end init_irq\n");
+  Log("Finish initializing interrupt/exception handler.");
 #endif
 
   init_fs();
