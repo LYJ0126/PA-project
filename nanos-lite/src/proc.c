@@ -54,7 +54,7 @@ void init_proc() {
   //context_uload(&pcb[0],"/bin/menu",NULL,NULL);
   //context_uload(&pcb[1],"/bin/exec-test",NULL,NULL);
   //context_uload(&pcb[1],"/bin/nterm",NULL,NULL);
-  context_uload(&pcb[1],"/vin/busybox",NULL,NULL);
+  context_uload(&pcb[1],"/bin/busybox",NULL,NULL);
   switch_boot_pcb();
 
   // load program here
