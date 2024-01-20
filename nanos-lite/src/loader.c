@@ -74,7 +74,6 @@ void naive_uload(PCB *pcb, const char *filename) {
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   //printf("context_uload\n");
-  uintptr_t entry = loader(pcb, filename);
   Area ustack;
   ustack.start = pcb->stack;
   ustack.end = pcb->stack + STACK_SIZE;
@@ -156,6 +155,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     ustack_sp[argc+2+i] = (uintptr_t)envp_sp[i];
   }
   ustack_sp[argc+numenvp+2] = 0;//envp[numenvp] = NULL
+  uintptr_t entry = loader(pcb, filename);
   Context *c = ucontext(NULL, ustack, (void *)entry);
   pcb->cp = c;
   pcb->cp->GPRx = (uintptr_t)ustack_sp;

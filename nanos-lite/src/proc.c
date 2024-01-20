@@ -50,8 +50,8 @@ void init_proc() {
   //switch_boot_pcb();
 
   Log("Initializing processes...");
-  //context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[0],"/bin/menu",NULL,NULL);
+  context_kload(&pcb[0], hello_fun, NULL);
+  //context_uload(&pcb[0],"/bin/menu",NULL,NULL);
   //context_uload(&pcb[1],"/bin/exec-test",NULL,NULL);
   context_uload(&pcb[1],"/bin/nterm",NULL,NULL);
   switch_boot_pcb();
@@ -78,6 +78,7 @@ int execve(const char *pathname, char *const argv[],char *const envp[]){
   //printf("pathname:%s\n",pathname);
   //naive_uload(NULL, pathname);
   context_uload(current, pathname, argv, envp);
+  //printf("finish context_uload\n");
   switch_boot_pcb();
   yield();
   return 0;
