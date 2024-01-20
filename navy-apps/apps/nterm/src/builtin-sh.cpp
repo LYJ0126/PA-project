@@ -25,7 +25,10 @@ static void sh_prompt() {
 static void sh_handle_cmd(const char *cmd) {
   //printf("\n");
   if(cmd[0] == '\n') return;
-  char *args = strtok((char *)cmd, "\n");
+  char cmd_copy[256];
+  strcpy(cmd_copy, cmd);
+  char *args = strtok((char *)cmd_copy, "\n");
+  //char *args = strtok((char *)cmd, "\n");
   //printf("args: %s\n", args);
   //printf("args length: %d\n", strlen(args));
   //printf("strcmp(args, \"help\"): %d\n", strcmp(args, "help"));
@@ -53,7 +56,28 @@ static void sh_handle_cmd(const char *cmd) {
   }*/
   //文件处理
   if(args == NULL) return;
-  if(execvp(args, NULL) == -1) {
+  //printf("args: %s\n", args);
+  char *file_name = strtok(args, " ");
+  //printf("file_name: %s\n", file_name);
+  args = strtok(strcpy(cmd_copy,cmd),"\n");
+  int argc = 0;
+  strtok(args," ");
+  if(strtok(NULL," ") != NULL){
+    argc++;
+    while(strtok(NULL," ") != NULL){
+      argc++;
+    }
+  }
+  //printf("argc: %d\n", argc);
+  char *argv[argc+1];
+  argv[argc] = NULL;
+  args = strtok(strcpy(cmd_copy,cmd),"\n");
+  int pos = 0;
+  strtok(args," ");
+  while(pos < argc){
+    argv[pos++] = strtok(NULL," ");
+  }
+  if(execvp(args, argv) == -1) {
     sh_printf("文件未找到\n");
   }
   return;
