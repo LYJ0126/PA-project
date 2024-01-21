@@ -6,7 +6,6 @@
 char handle_key(SDL_Event *ev);
 
 //extern void exit(int);
-extern void halt(int);
 static void sh_printf(const char *format, ...) {
   static char buf[256] = {};
   va_list ap;
@@ -41,7 +40,7 @@ static void sh_handle_cmd(const char *cmd) {
     sh_printf("help: show this message\n");
     sh_printf("hello world: say hello to the world\n");
     sh_printf("clear: clear the screen\n");
-    sh_printf("exit: exit the shell\n");
+    //sh_printf("exit: exit the shell\n");
     //sh_printf("  exit: exit the shell\n");
     return;
   } 
@@ -54,12 +53,7 @@ static void sh_handle_cmd(const char *cmd) {
     exit(0);
     return;
   }
-  else if(strcmp(args, "exit") == 0) {
-    //exit(-1);
-    halt(0);
-    return;
-  }
-  /*else if (strcmp(cmd, "exit") == 0) {
+  /*else if (strcmp(args, "exit") == 0) {
     exit(0);
     return;
   }*/
