@@ -64,19 +64,18 @@ static void sh_handle_cmd(const char *cmd) {
   //printf("file_name: %s\n", file_name);
   args = strtok(strcpy(cmd_copy,cmd),"\n");
   int argc = 0;
-  strtok(args," ");
-  if(strtok(NULL," ") != NULL){
+  if(strtok(args," ") != NULL){
     argc++;
     while(strtok(NULL," ") != NULL){
       argc++;
     }
   }
   //printf("argc: %d\n", argc);
-  char *argv[argc+1];
+  char *(argv[argc+1]);
   argv[argc] = NULL;
   args = strtok(strcpy(cmd_copy,cmd),"\n");
   int pos = 0;
-  strtok(args," ");
+  argv[pos++] = strtok(args," ");
   while(pos < argc){
     argv[pos++] = strtok(NULL," ");
   }
