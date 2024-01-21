@@ -49,11 +49,12 @@ static void sh_handle_cmd(const char *cmd) {
     return;
   } 
   else if(strcmp(args,"clear")==0){
-    term->clear();
+    //term->clear();
+    exit(0);
     return;
   }
   else if(strcmp(args, "exit") == 0) {
-    exit(0);
+    exit(-1);
     return;
   }
   /*else if (strcmp(cmd, "exit") == 0) {
