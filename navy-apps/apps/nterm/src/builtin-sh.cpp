@@ -44,15 +44,15 @@ static void sh_handle_cmd(const char *cmd) {
     //sh_printf("  exit: exit the shell\n");
     return;
   } 
-  else if (strcmp(cmd, "hello world") == 0) {
+  else if (strcmp(args, "hello world") == 0) {
     sh_printf("Hello, world!\n");
     return;
   } 
-  else if(strcmp(cmd,"clear")==0){
+  else if(strcmp(args,"clear")==0){
     term->clear();
     return;
   }
-  else if(strcmp(cmd, "exit") == 0) {
+  else if(strcmp(args, "exit") == 0) {
     exit(0);
     return;
   }
