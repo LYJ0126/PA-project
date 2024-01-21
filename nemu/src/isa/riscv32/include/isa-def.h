@@ -25,6 +25,7 @@ typedef struct {
   word_t mstatus;//存放处理器的状态
   word_t mcause;//存放触发异常的原因
   vaddr_t mtvec;//存放异常入口地址
+  bool INTR;//中断标志位
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);//宏预处理最后这里是riscv32_CPU_state
 
 // decode

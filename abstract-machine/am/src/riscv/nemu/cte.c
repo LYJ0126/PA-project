@@ -37,6 +37,7 @@ Context* __am_irq_handle(Context *c) {
       case 18: ev.event = EVENT_SYSCALL; break;
       case 19: ev.event = EVENT_SYSCALL; break;
       case 0xffffffff: ev.event = EVENT_YIELD; break;
+      case 0x80000007: ev.event = EVENT_IRQ_TIMER; break;
       default: ev.event = EVENT_ERROR; break;
     }
 
@@ -73,6 +74,8 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   //c->gpr[2] = (uintptr_t)kstack.end;
   //设置内核线程参数
   c-> GPR2 = (uintptr_t)arg;
+  //设置中断状态
+  c->mstatus = 0x1800 | 0x80;
   //设置内核线程入口
   c->mepc = (uintptr_t)entry;
   return c;

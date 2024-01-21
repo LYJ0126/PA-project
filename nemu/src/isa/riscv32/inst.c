@@ -66,6 +66,13 @@ void etraceprint(word_t NO, vaddr_t epc){
 	printf("epc: %x\n", epc);
 }
 
+void MIE_recovery(){
+	//MPIE还原到MIE
+	cpu.mstatus = (cpu.mstatus & ~(1 << 3)) | (((cpu.mstatus >> 7) & 0x1) << 3);
+	//MPIE置1
+	cpu.mstatus = cpu.mstatus | (1 << 7);
+}
+
 static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
@@ -127,7 +134,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, uint32_t* csraddr = CSR(imm); if(rd!=0) {R(rd) = *csraddr;} *csraddr = src1);
 	INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, uint32_t* csraddr = CSR(imm); R(rd) = *csraddr; if(src1 != 0) *csraddr = *csraddr | src1);
 	INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, uint32_t* csraddr = CSR(imm); R(rd)=*csraddr; if(src1 != 0) *csraddr = *csraddr & (~src1));
-	INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.mepc + 4);
+	INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, MIE_recovery(); s->dnpc=cpu.mepc+4);
 	
 
 

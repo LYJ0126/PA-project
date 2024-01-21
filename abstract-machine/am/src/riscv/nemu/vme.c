@@ -75,7 +75,8 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   memset(c, 0, sizeof(Context));//将Context结构体清零
   //将栈顶指针保存在Context记录的sp寄存器对应的位
   //c->gpr[2] = (uintptr_t)kstack.end;
-  
+  //设置中断状态
+  c->mstatus = 0x1800 | 0x80;
   //设置用户进程入口
   c->mepc = (uintptr_t)entry;
   return c;
