@@ -23,6 +23,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.mstatus = (cpu.mstatus & ~(1 << 7)) | (((cpu.mstatus >> 3) & 0x1) << 7);
   //MIE置0
   cpu.mstatus = cpu.mstatus & ~(1 << 3);
+  epc += 4;//epc指向下一条指令
   cpu.mcause = NO;//存放触发异常的原因到mcause寄存器中
   //printf("mcause: %x\n", cpu.mcause);
   cpu.mepc = epc;//存放触发异常的PC到mepc寄存器中
