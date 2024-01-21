@@ -6,6 +6,7 @@
 char handle_key(SDL_Event *ev);
 
 //extern void exit(int);
+extern void halt(int);
 static void sh_printf(const char *format, ...) {
   static char buf[256] = {};
   va_list ap;
@@ -54,7 +55,8 @@ static void sh_handle_cmd(const char *cmd) {
     return;
   }
   else if(strcmp(args, "exit") == 0) {
-    exit(-1);
+    //exit(-1);
+    halt(0);
     return;
   }
   /*else if (strcmp(cmd, "exit") == 0) {
