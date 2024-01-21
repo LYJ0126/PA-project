@@ -7,5 +7,5 @@ void putch(char ch) {
 }
 
 void halt(int code) {
-    //exit(code);//利用系统调用进行退出
+    exit(code);//利用系统调用进行退出
 }

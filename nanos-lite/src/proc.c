@@ -53,8 +53,7 @@ void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
   //context_uload(&pcb[0],"/bin/menu",NULL,NULL);
   //context_uload(&pcb[1],"/bin/exec-test",NULL,NULL);
-  //context_uload(&pcb[1],"/bin/nterm",NULL,NULL);
-  context_uload(&pcb[1],"/bin/busybox",NULL,NULL);
+  context_uload(&pcb[1],"/bin/nterm",NULL,NULL);
   switch_boot_pcb();
 
   // load program here
@@ -73,7 +72,7 @@ Context* schedule(Context *prev) {
 
 int execve(const char *pathname, char *const argv[],char *const envp[]){
   int fd = fs_open(pathname, 0, 0);
-  if(fd == -1) return -1;
+  if(fd == -1) return -2;
   fs_close(fd);
   //printf("fd:%d\n",fd);
   //printf("pathname:%s\n",pathname);
@@ -83,4 +82,14 @@ int execve(const char *pathname, char *const argv[],char *const envp[]){
   switch_boot_pcb();
   yield();
   return 0;
+}
+
+void exit(int status)
+{
+  if (status == 0)
+  {
+    execve("/bin/nterm", NULL, NULL);
+  }
+  else
+    halt(status);
 }

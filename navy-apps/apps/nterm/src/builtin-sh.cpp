@@ -5,6 +5,7 @@
 
 char handle_key(SDL_Event *ev);
 
+//extern void exit(int);
 static void sh_printf(const char *format, ...) {
   static char buf[256] = {};
   va_list ap;
@@ -39,6 +40,7 @@ static void sh_handle_cmd(const char *cmd) {
     sh_printf("help: show this message\n");
     sh_printf("hello world: say hello to the world\n");
     sh_printf("clear: clear the screen\n");
+    sh_printf("exit: exit the shell\n");
     //sh_printf("  exit: exit the shell\n");
     return;
   } 
@@ -46,7 +48,11 @@ static void sh_handle_cmd(const char *cmd) {
     sh_printf("Hello, world!\n");
     return;
   } 
-  else if(strcmp(cmd, "clear") == 0) {
+  else if(strcmp(cmd,"clear")==0){
+    term->clear();
+    return;
+  }
+  else if(strcmp(cmd, "exit") == 0) {
     exit(0);
     return;
   }
@@ -77,7 +83,7 @@ static void sh_handle_cmd(const char *cmd) {
   while(pos < argc){
     argv[pos++] = strtok(NULL," ");
   }
-  if(execvp(args, argv) == -1) {
+  if(execvp(args, argv) < 0) {
     sh_printf("文件未找到\n");
   }
   return;
@@ -86,7 +92,7 @@ static void sh_handle_cmd(const char *cmd) {
 void builtin_sh_run() {
   sh_banner();
   sh_prompt();
-  setenv("PATH", "/bin/", 0);
+  setenv("PATH", "/bin:/usr/bin", 0);
   while (1) {
     SDL_Event ev;
     if (SDL_PollEvent(&ev)) {

@@ -9,6 +9,7 @@ extern size_t fs_lseek(int fd, size_t offset, int whence);
 extern int fs_close(int fd);
 extern int mygettimeofday(struct timeval *tv, struct timezone *tz);
 extern int execve(const char *pathname, char *const argv[],char *const envp[]);
+extern void exit(int status);
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;//a7
@@ -19,7 +20,8 @@ void do_syscall(Context *c) {
   switch (a[0]) {
     case 0: {
       //printf("SYS_exit, a0 = %d\n", a[1]); 
-      execve("/bin/nterm", NULL, NULL);
+      //execve("/bin/nterm", NULL, NULL);
+      exit((int)a[1]);
       break;
     }
     case 1: printf("SYS_yield\n"); yield(); c->GPRx = 0; break;
