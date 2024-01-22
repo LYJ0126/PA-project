@@ -74,8 +74,8 @@ void naive_uload(PCB *pcb, const char *filename) {
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   //printf("context_uload\n");
-  protect(&pcb->as);
-  
+  //protect(&pcb->as);
+
   Area ustack;
   ustack.start = pcb->stack;
   ustack.end = pcb->stack + STACK_SIZE;
