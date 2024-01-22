@@ -17,27 +17,27 @@
 #include <memory/paddr.h>
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
-  //return paddr_read(addr, len);
-  int flag = isa_mmu_check(addr, len, MEM_TYPE_IFETCH);
+  return paddr_read(addr, len);
+  /*int flag = isa_mmu_check(addr, len, MEM_TYPE_IFETCH);
   if(flag == MMU_DIRECT) return paddr_read(addr, len);
   else if(flag == MMU_TRANSLATE) return paddr_read(isa_mmu_translate(addr, len, MEM_TYPE_IFETCH), len);
   else assert(0);
-  return addr;
+  return addr;*/
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
-  //return paddr_read(addr, len);
-  int flag = isa_mmu_check(addr, len, MEM_TYPE_READ);
+  return paddr_read(addr, len);
+  /*int flag = isa_mmu_check(addr, len, MEM_TYPE_READ);
   if(flag == MMU_DIRECT) return paddr_read(addr, len);
   else if(flag == MMU_TRANSLATE) return paddr_read(isa_mmu_translate(addr, len, MEM_TYPE_READ), len);
   else assert(0);
-  return addr;
+  return addr;*/
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
-  //paddr_write(addr, len, data);
-  int flag = isa_mmu_check(addr, len, MEM_TYPE_WRITE);
+  paddr_write(addr, len, data);
+  /*int flag = isa_mmu_check(addr, len, MEM_TYPE_WRITE);
   if(flag == MMU_DIRECT) paddr_write(addr, len, data);
   else if(flag == MMU_TRANSLATE) paddr_write(isa_mmu_translate(addr, len, MEM_TYPE_WRITE), len, data);
-  else assert(0);
+  else assert(0);*/
 }

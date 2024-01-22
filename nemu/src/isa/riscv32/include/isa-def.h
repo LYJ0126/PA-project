@@ -36,6 +36,7 @@ typedef struct {
   } inst;
 } MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);//宏预处理最后这里是riscv32_ISADecodeInfo
 
-#define isa_mmu_check(vaddr, len, type) (((cpu.satp >> 31) & 1) ? MMU_TRANSLATE : MMU_DIRECT)
+//#define isa_mmu_check(vaddr, len, type) (((cpu.satp >> 31) & 1) ? MMU_TRANSLATE : MMU_DIRECT)
+#define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
 #endif
