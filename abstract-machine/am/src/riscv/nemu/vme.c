@@ -66,7 +66,27 @@ void __am_switch(Context *c) {
   }
 }
 
+
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  uintptr_t vaddr = (uintptr_t)va;
+  uintptr_t paddr = (uintptr_t)pa;
+  uint32_t ppn  = (paddr >> 12) & 0xfffff;//物理页号
+  uint32_t vpn1 = (vaddr >> 22) & 0x3ff;//一级页表索引
+  uint32_t vpn0 = (vaddr >> 12) & 0x3ff;//二级页表索引
+  PTE *pdirbase = (PTE *)as->ptr;//页目录基址
+  PTE *ptablebase = &pdirbase[vpn1];//页表基址
+  if(*ptablebase == 0) {//页表不存在
+    PTE *tempptablebase = (PTE *)pgalloc_usr(PGSIZE);//分配一个页表
+    *ptablebase = (uintptr_t)tempptablebase | PTE_V;//将页表的基地址写入对应页目录
+    PTE *ptabletarget = &tempptablebase[vpn0];//页表项地址
+    *ptabletarget = (ppn << 12) | PTE_X | PTE_W | PTE_R | PTE_V;//将页表项的内容写入页表(物理页号+权限)
+  }
+  else {//页表存在
+    PTE *realptablebase = (PTE *)(*ptablebase & 0xfffff000);//页表基址
+    PTE *ptabletarget = &realptablebase[vpn0];//页表项地址
+    *ptabletarget = (ppn << 12) | PTE_X | PTE_W | PTE_R | PTE_V;//将页表项的内容写入页表(物理页号+权限)
+  }
+  
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
