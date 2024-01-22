@@ -12,7 +12,7 @@ static Context* do_event(Event e, Context* c) {
     }
     case EVENT_IRQ_TIMER:{
       //printf("Event irq timer, event ID = %d\n", e.event); 
-      Log("receive irq timer");
+      //Log("receive irq timer");
       c = schedule(c);
       break;
     }
